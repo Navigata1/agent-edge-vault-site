@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Island Development Crew — Ten Islands. One Frontier.</title>
+<meta name="description" content="A holding company for category-defining technology. One parent, ten operating ventures — from AI governance to autonomous agent infrastructure. Huntsville, AL.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A1420;
+  --deep:#0E1C2D;
+  --panel:#101F32;
+  --bone:#E9E2D0;
+  --bone-dim:rgba(233,226,208,.58);
+  --bone-faint:rgba(233,226,208,.32);
+  --line:rgba(233,226,208,.13);
+  --line-soft:rgba(233,226,208,.07);
+  --gold:#D9A441;
+  --teal:#3FB8AF;
+  --coral:#E2654A;
+  --display:'Fraunces',serif;
+  --body:'Archivo',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--gold);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);opacity:.7}
+.eyebrow.teal{color:var(--teal)}.eyebrow.teal::before{background:var(--teal)}
+h2.sec{
+  font-family:var(--display);font-weight:500;
+  font-size:clamp(2.1rem,4.4vw,3.4rem);line-height:1.08;
+  letter-spacing:-.015em;margin:20px 0 16px;
+}
+.lede{color:var(--bone-dim);max-width:620px;font-size:17.5px}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:rgba(10,20,32,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.navin{max-width:1240px;margin:0 auto;padding:0 32px;height:66px;display:flex;align-items:center;gap:34px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.01em}
+.brand .mark{
+  width:30px;height:30px;border:1.4px solid var(--gold);border-radius:50%;
+  display:grid;place-items:center;font-family:var(--mono);font-size:10px;color:var(--gold);
+}
+.brand small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--bone-faint);font-weight:400}
+.navlinks{display:flex;gap:26px;margin-left:auto;font-size:14.5px;color:var(--bone-dim)}
+.navlinks a{position:relative;padding:4px 0;transition:color .25s}
+.navlinks a:hover,.navlinks a:focus-visible{color:var(--bone)}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.navlinks a:hover::after{width:100%}
+.navcta{
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;
+  border:1px solid var(--gold);color:var(--gold);padding:9px 18px;border-radius:3px;
+  transition:background .25s,color .25s;
+}
+.navcta:hover{background:var(--gold);color:var(--ink)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ---------- hero ---------- */
+header{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+#sea{position:absolute;inset:0;width:100%;height:100%}
+.heroveil{position:absolute;inset:0;background:radial-gradient(ellipse at 28% 42%,rgba(10,20,32,.18) 0%,rgba(10,20,32,.78) 78%)}
+.heroin{position:relative;z-index:2;padding:140px 0 0}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--bone-faint);display:flex;gap:22px;flex-wrap:wrap;margin-bottom:30px}
+.kicker b{color:var(--teal);font-weight:500}
+h1{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(3.1rem,9vw,7rem);line-height:.98;letter-spacing:-.025em;
+  max-width:13ch;
+}
+h1 .w{display:inline-block;overflow:hidden;vertical-align:bottom}
+h1 .w span{display:inline-block;transform:translateY(110%);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+h1 em{font-style:italic;color:var(--gold)}
+@keyframes rise{to{transform:translateY(0)}}
+.herosub{margin:30px 0 40px;max-width:560px;color:var(--bone-dim);font-size:18.5px;opacity:0;animation:fadeup .8s .9s forwards}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.heroctas{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeup .8s 1.1s forwards}
+.btn{
+  font-family:var(--mono);font-size:13px;letter-spacing:.08em;padding:14px 26px;border-radius:3px;
+  display:inline-flex;align-items:center;gap:10px;transition:transform .25s,background .25s,color .25s,border-color .25s;
+}
+.btn.gold{background:var(--gold);color:var(--ink);font-weight:500}
+.btn.gold:hover{transform:translateY(-2px);background:#E6B454}
+.btn.ghost{border:1px solid var(--line);color:var(--bone-dim)}
+.btn.ghost:hover{border-color:var(--bone-dim);color:var(--bone);transform:translateY(-2px)}
+.telemetry{
+  position:relative;z-index:2;margin-top:auto;border-top:1px solid var(--line-soft);
+  background:rgba(10,20,32,.5);backdrop-filter:blur(8px);
+}
+.telin{max-width:1240px;margin:0 auto;padding:22px 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px}
+.tel{border-left:1px solid var(--line);padding-left:18px}
+.tel .n{font-family:var(--display);font-size:34px;font-weight:500;color:var(--bone);line-height:1.1}
+.tel .n sup{font-size:18px;color:var(--gold)}
+.tel .l{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-faint);margin-top:4px}
+
+/* ---------- shared section chrome ---------- */
+section{padding:120px 0;position:relative}
+.route{height:1px;margin:0 auto;max-width:1240px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- harbor chart ---------- */
+.chartbox{
+  margin-top:54px;border:1px solid var(--line);border-radius:6px;background:var(--deep);
+  position:relative;overflow:hidden;
+}
+.chartbox .corner{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--bone-faint);padding:14px 18px}
+.corner.tl{top:0;left:0}.corner.tr{top:0;right:0}.corner.bl{bottom:0;left:0}.corner.br{bottom:0;right:0}
+#harbor{display:block;width:100%;height:auto}
+.island-node{cursor:pointer}
+.island-node .blob{transition:opacity .3s}
+.island-node text{font-family:var(--mono);font-size:11px;letter-spacing:.1em;fill:var(--bone-dim);transition:fill .3s}
+.island-node .sub{font-size:9px;fill:var(--bone-faint);letter-spacing:.14em}
+.island-node:hover text,.island-node:focus text{fill:var(--bone)}
+.island-node:hover .blob{opacity:1}
+.legend{display:flex;gap:26px;margin-top:22px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--bone-faint);flex-wrap:wrap}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:-1px}
+
+/* ---------- venture cards ---------- */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:22px;margin-top:54px}
+.vcard{
+  border:1px solid var(--line);border-radius:6px;background:var(--deep);
+  padding:26px 26px 24px;position:relative;overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,background .35s;
+  scroll-margin-top:90px;
+}
+.vcard:hover{transform:translateY(-5px);border-color:rgba(217,164,65,.45);background:var(--panel)}
+.vcard .motif{position:absolute;top:-18px;right:-18px;width:150px;height:150px;opacity:.5;transition:opacity .4s,transform .6s}
+.vcard:hover .motif{opacity:.95;transform:rotate(8deg) scale(1.05)}
+.vhead{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:3px;border:1px solid}
+.chip.live{color:var(--gold);border-color:rgba(217,164,65,.5)}
+.chip.beta{color:var(--teal);border-color:rgba(63,184,175,.5)}
+.chip.lab{color:var(--bone-faint);border-color:var(--line)}
+.vcard h3{font-family:var(--display);font-weight:500;font-size:26px;letter-spacing:-.01em;position:relative}
+.vmeta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-faint);margin:2px 0 12px;position:relative}
+.vcard p{font-size:15px;color:var(--bone-dim);position:relative;max-width:42ch}
+.vlink{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--gold);position:relative}
+.vlink::after{content:"→";transition:transform .3s}
+.vcard:hover .vlink::after{transform:translateX(5px)}
+</style>
+</head>
+<body>
+<style>
+/* ---------- ethos spotlight ---------- */
+.ethos{background:var(--deep);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.esplit{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;margin-top:54px;align-items:center}
+.eblock{margin-bottom:34px}
+.eblock .el{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.eblock .el::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 12px)}
+.eblock p{color:var(--bone-dim);font-size:16px;max-width:52ch}
+.gempanel{
+  border:1px solid var(--line);border-radius:6px;background:var(--ink);
+  position:relative;padding:30px;min-height:460px;display:flex;flex-direction:column;
+}
+.gempanel .gtag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--bone-faint);display:flex;justify-content:space-between}
+#gem{flex:1;width:100%;height:auto;margin:10px 0}
+.gcap{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--bone-faint);text-align:center}
+.gcap b{color:var(--gold);font-weight:500}
+.estatus{display:flex;gap:12px;align-items:center;margin-top:6px;flex-wrap:wrap}
+
+/* ---------- principles ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:54px}
+.pcard{border-top:1px solid var(--line);padding-top:22px}
+.pcard .pn{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--teal);margin-bottom:12px}
+.pcard h4{font-family:var(--display);font-weight:500;font-size:21px;margin-bottom:8px}
+.pcard p{font-size:14.5px;color:var(--bone-dim)}
+
+/* ---------- closing + footer ---------- */
+.close{position:relative;overflow:hidden;text-align:center;padding:160px 0}
+.close h2{font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,6vw,4.6rem);letter-spacing:-.02em;line-height:1.05;margin-bottom:18px}
+.close p{color:var(--bone-dim);max-width:520px;margin:0 auto 38px}
+.close .heroctas{justify-content:center;opacity:1;animation:none}
+footer{border-top:1px solid var(--line-soft);padding:44px 0;background:var(--ink)}
+.footin{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.footin .fmeta{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--bone-faint)}
+.flinks{display:flex;gap:22px;font-size:13.5px;color:var(--bone-dim)}
+.flinks a:hover{color:var(--gold)}
+
+@media (max-width:900px){
+  .navlinks{display:none}
+  .esplit{grid-template-columns:1fr}
+  section{padding:84px 0}
+  .heroin{padding-top:120px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  h1 .w span{transform:none}
+  .herosub,.heroctas{opacity:1}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+
+<nav>
+  <div class="navin">
+    <a class="brand" href="#top">
+      <span class="mark">IDC</span>
+      <span>Island Development Crew<small>PARENT COMPANY · HSV</small></span>
+    </a>
+    <div class="navlinks">
+      <a href="#chart">The Chart</a>
+      <a href="#ventures">Ventures</a>
+      <a href="#ethos">Ethos</a>
+      <a href="#principles">R&amp;D</a>
+    </div>
+    <a class="navcta" href="mailto:hello@islanddevcrew.com">CONTACT THE CREW</a>
+  </div>
+</nav>
+
+<header id="top">
+  <canvas id="sea" aria-hidden="true"></canvas>
+  <div class="heroveil" aria-hidden="true"></div>
+  <div class="wrap heroin">
+    <div class="kicker">
+      <span>34.73°N · 86.59°W</span>
+      <span>HUNTSVILLE, AL — HQ</span>
+      <span><b>CONCEPT PROTOTYPE · REFACTOR DIRECTION v1</b></span>
+    </div>
+    <h1>
+      <span class="w"><span style="animation-delay:.05s">Ten</span></span>
+      <span class="w"><span style="animation-delay:.13s">islands.</span></span><br>
+      <span class="w"><span style="animation-delay:.24s">One</span></span>
+      <span class="w"><span style="animation-delay:.32s"><em>frontier.</em></span></span>
+    </h1>
+    <p class="herosub">Island Development Crew is a holding company for category-defining technology — one parent charting ten operating ventures, from AI governance to autonomous agent infrastructure.</p>
+    <div class="heroctas">
+      <a class="btn gold" href="#chart">READ THE CHART</a>
+      <a class="btn ghost" href="#ventures">EXPLORE THE VENTURES</a>
+    </div>
+  </div>
+  <div class="telemetry">
+    <div class="telin">
+      <div class="tel"><div class="n" data-count="10">0</div><div class="l">Operating ventures</div></div>
+      <div class="tel"><div class="n" data-count="30" data-suffix="+">0</div><div class="l">Products in portfolio</div></div>
+      <div class="tel"><div class="n" data-count="10">0</div><div class="l">Industry verticals</div></div>
+      <div class="tel"><div class="n" data-count="2024" data-raw="1">0</div><div class="l">Founded · Huntsville</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="chart">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Chart</div>
+    <h2 class="sec reveal">A living map of the crew</h2>
+    <p class="lede reveal">The org chart, made navigable. The beacon is the parent company; every island is a venture holding its own products, status, and course. Select an island to sail to its card.</p>
+    <div class="chartbox reveal">
+      <span class="corner tl">IDC ARCHIPELAGO · SURVEY 2026</span>
+      <span class="corner tr">SCALE 1 : FRONTIER</span>
+      <span class="corner bl">SOUNDINGS IN PRODUCTS</span>
+      <span class="corner br">J. ISAAC, FOUNDER &amp; NAVIGATOR</span>
+      <svg id="harbor" viewBox="0 0 1180 560" role="img" aria-label="Interactive map of ten venture islands connected to the Island Development Crew beacon"></svg>
+    </div>
+    <div class="legend reveal">
+      <span><i style="background:var(--gold)"></i>LIVE</span>
+      <span><i style="background:var(--teal)"></i>BETA</span>
+      <span><i style="background:var(--bone-faint)"></i>IN THE LAB</span>
+      <span style="margin-left:auto">DASHED ROUTES = SHARED INFRASTRUCTURE</span>
+    </div>
+  </div>
+</section>
+
+<div class="route"></div>
+<section id="ventures">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Ventures</div>
+    <h2 class="sec reveal">Ten divisions. Each with a living mark.</h2>
+    <p class="lede reveal">Every venture carries a seeded, generated island — no two alike, drawn fresh by algorithm, replacing static imagery with identity that belongs only to it.</p>
+    <div class="vgrid" id="vgrid"></div>
+  </div>
+</section>
+
+<section class="ethos" id="ethos">
+  <div class="wrap">
+    <div class="eyebrow reveal">Ethos Spotlight · What Every Product Page Becomes</div>
+    <h2 class="sec reveal">Garnet</h2>
+    <p class="lede reveal">The template for the missing layer: each of the 30+ products gets a page that holds its origin, its design ethos, and its honest status — shown here with the R&amp;D flagship.</p>
+    <div class="esplit">
+      <div>
+        <div class="eblock reveal">
+          <div class="el">Origin</div>
+          <p>Born inside the lab, not the market. Agent infrastructure kept demanding a foundation that didn't exist — so the crew began building a systems language from first principles, designed for the age of autonomous intelligence.</p>
+        </div>
+        <div class="eblock reveal">
+          <div class="el">Ethos</div>
+          <p>The safety of modern type systems with the performance AI-native applications demand. Governance is not a layer bolted on top — it is a property of the language itself.</p>
+        </div>
+        <div class="eblock reveal">
+          <div class="el">Status</div>
+          <p>In the lab — open source, contributions welcome. Said plainly, because honest status is a roadmap, not a weakness.</p>
+          <div class="estatus">
+            <span class="chip lab">IN THE LAB</span>
+            <span class="chip live">OPEN SOURCE</span>
+            <a class="vlink" href="https://github.com/Island-Dev-Crew/garnet">READ THE FULL ETHOS</a>
+          </div>
+        </div>
+      </div>
+      <div class="gempanel reveal">
+        <div class="gtag"><span>SPECIMEN · GARNET</span><span>WIREFRAME 04</span></div>
+        <svg id="gem" viewBox="0 0 340 340" role="img" aria-label="Slowly rotating wireframe garnet crystal, a rhombic dodecahedron"></svg>
+        <div class="gcap">CRYSTAL HABIT: <b>RHOMBIC DODECAHEDRON</b> · 24 FACES · DRAWN LIVE</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="principles">
+  <div class="wrap">
+    <div class="eyebrow teal reveal">Build Standards</div>
+    <h2 class="sec reveal">Motion with a budget</h2>
+    <p class="lede reveal">Everything animated on this page obeys four rules — so the art compounds credibility instead of costing it.</p>
+    <div class="pgrid">
+      <div class="pcard reveal"><div class="pn">RULE 01</div><h4>Reduced motion, respected</h4><p>Every animation on this page collapses gracefully when the visitor asks for stillness. Try it — the content survives intact.</p></div>
+      <div class="pcard reveal"><div class="pn">RULE 02</div><h4>Canvas sleeps offscreen</h4><p>The sea and the gem only render while visible. No hidden loops burning frames behind the scroll.</p></div>
+      <div class="pcard reveal"><div class="pn">RULE 03</div><h4>Content before chrome</h4><p>Headline, copy, and links are plain HTML — readable by crawlers, screen readers, and no-JS contexts. No more counters stuck at zero.</p></div>
+      <div class="pcard reveal"><div class="pn">RULE 04</div><h4>One signature per page</h4><p>Each surface earns one memorable moment. Everything around it stays quiet, so the moment lands.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="route"></div>
+
+<section class="close">
+  <canvas id="sea2" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;opacity:.35"></canvas>
+  <div class="wrap" style="position:relative">
+    <div class="eyebrow reveal" style="justify-content:center">Build With Us</div>
+    <h2 class="reveal">Help engineer the <em style="color:var(--gold);font-style:italic">next frontier.</em></h2>
+    <p class="reveal">Partnerships, open source, careers, and press — start a conversation with the crew.</p>
+    <div class="heroctas reveal">
+      <a class="btn gold" href="mailto:hello@islanddevcrew.com">CONTACT THE CREW</a>
+      <a class="btn ghost" href="https://github.com/Island-Dev-Crew">OPEN SOURCE</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footin">
+    <div class="brand"><span class="mark">IDC</span><span style="font-size:14.5px">Island Development Crew<small>ENGINEERING THE NEXT FRONTIER</small></span></div>
+    <div class="flinks"><a href="#chart">Chart</a><a href="#ventures">Ventures</a><a href="#ethos">Ethos</a><a href="mailto:hello@islanddevcrew.com">Contact</a></div>
+    <div class="fmeta">© 2026 IDC LLC · 10 SUITES · 30+ APPLICATIONS · HUNTSVILLE, AL</div>
+  </div>
+</footer>
+<script>
+(function(){
+"use strict";
+var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- seeded rng + island contour generator ---------- */
+function rng(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return (s-1)/2147483646;};}
+function islandPath(seed,cx,cy,r,wobT){
+  var rand=rng(seed),pts=[],N=46;
+  var a1=.14+rand()*.12,a2=.07+rand()*.08,a3=.04+rand()*.05;
+  var p1=rand()*6.28,p2=rand()*6.28,p3=rand()*6.28;
+  for(var i=0;i<=N;i++){
+    var th=i/N*Math.PI*2;
+    var rr=r*(1+a1*Math.sin(3*th+p1)+a2*Math.sin(5*th+p2+ (wobT||0))+a3*Math.sin(8*th+p3));
+    pts.push([cx+Math.cos(th)*rr, cy+Math.sin(th)*rr*.82]);
+  }
+  var d="M"+pts[0][0].toFixed(1)+" "+pts[0][1].toFixed(1);
+  for(var j=1;j<pts.length;j++)d+="L"+pts[j][0].toFixed(1)+" "+pts[j][1].toFixed(1);
+  return d+"Z";
+}
+function contourGroup(seed,cx,cy,r,accent){
+  var g='';
+  var rings=[1,.66,.36];
+  for(var i=0;i<rings.length;i++){
+    var col=(i===rings.length-1)?accent:"rgba(233,226,208,.28)";
+    var w=(i===rings.length-1)?1.4:1;
+    g+='<path class="blob" d="'+islandPath(seed+i*97,cx,cy,r*rings[i])+'" fill="none" stroke="'+col+'" stroke-width="'+w+'"/>';
+  }
+  return g;
+}
+
+/* ---------- venture data (real portfolio) ---------- */
+var STATUS={live:{cls:"live",label:"LIVE",col:"#D9A441"},beta:{cls:"beta",label:"BETA",col:"#3FB8AF"},lab:{cls:"lab",label:"IN THE LAB",col:"rgba(233,226,208,.4)"}};
+var V=[
+ {id:"neuralforge",name:"NeuralForge OS",vert:"AI Governance",n:5,st:"live",seed:11,copy:"OS-level AI with built-in truth verification — the intelligence infrastructure powering everything IDC builds."},
+ {id:"agentpact",name:"AgentPact",vert:"Agent Infrastructure",n:5,st:"beta",seed:23,copy:"The premium intelligence layer for autonomous agents — edge intel, skill marketplace, persistent memory."},
+ {id:"automotive",name:"Automotive Suite",vert:"Automotive",n:3,st:"live",seed:37,copy:"AI-powered damage recognition, parts marketplace, and visual cataloging — transforming automotive salvage."},
+ {id:"synchq",name:"SyncHQ",vert:"Productivity & Meaning",n:5,st:"live",seed:41,copy:"Productivity tools that sync your work — and meaning tools that sync your life. Two pillars, one platform."},
+ {id:"kindlycrew",name:"KindlyCrew",vert:"Healthcare",n:3,st:"beta",seed:53,copy:"Precision-engineered elder-care technology connecting caregivers, families, and enterprises."},
+ {id:"education",name:"Education & Literacy",vert:"Education",n:3,st:"live",seed:67,copy:"Financial literacy and debt-optimization tools engineered to accelerate financial intelligence."},
+ {id:"design",name:"IDC Design Agency",vert:"Design & Development",n:4,st:"live",seed:71,copy:"Multi-agent design methodology, chatbot builders, and voice-agent creation — enterprise design infrastructure."},
+ {id:"launchgrid",name:"LaunchGrid",vert:"Frameworks",n:5,st:"live",seed:83,copy:"Battle-tested methodologies and open protocols that power how IDC builds — planning, governance, interop."},
+ {id:"press",name:"IDC Press",vert:"Publishing",n:1,st:"lab",seed:89,copy:"Original research and long-form analysis on AI, business, and technology. Led by Ride the Wave."},
+ {id:"community",name:"Community & Impact",vert:"Community",n:4,st:"live",seed:97,copy:"AI-literacy programs, STEM initiatives, and local partnerships — innovation at the community level."}
+];
+
+/* ---------- venture cards with seeded motifs ---------- */
+var grid=document.getElementById("vgrid"),cards="";
+V.forEach(function(v){
+  var s=STATUS[v.st];
+  cards+='<a class="vcard reveal" id="v-'+v.id+'" href="#v-'+v.id+'">'
+   +'<svg class="motif" viewBox="0 0 150 150" aria-hidden="true">'+contourGroup(v.seed,75,75,52,s.col)+'</svg>'
+   +'<div class="vhead"><span class="chip '+s.cls+'">'+s.label+'</span></div>'
+   +'<h3>'+v.name+'</h3>'
+   +'<div class="vmeta">'+v.vert+' · '+v.n+' PRODUCT'+(v.n>1?"S":"")+'</div>'
+   +'<p>'+v.copy+'</p>'
+   +'<span class="vlink">EXPLORE SUITE</span></a>';
+});
+grid.innerHTML=cards;
+
+/* ---------- harbor chart ---------- */
+var POS=[[180,150],[420,105],[665,95],[915,140],[1050,290],[930,440],[680,470],[430,460],[185,420],[95,275]];
+var H=document.getElementById("harbor"),BX=590,BY=278,h="";
+h+='<g opacity=".5">';
+for(var gx=0;gx<=1180;gx+=118)h+='<line x1="'+gx+'" y1="0" x2="'+gx+'" y2="560" stroke="rgba(233,226,208,.05)"/>';
+for(var gy=0;gy<=560;gy+=112)h+='<line x1="0" y1="'+gy+'" x2="1180" y2="'+gy+'" stroke="rgba(233,226,208,.05)"/>';
+h+='</g>';
+h+='<g id="bearing" style="transform-origin:590px 278px;'+(RM?'':'animation:spin 140s linear infinite;')+'">';
+h+='<circle cx="590" cy="278" r="218" fill="none" stroke="rgba(233,226,208,.1)" stroke-dasharray="2 10"/>';
+for(var t=0;t<24;t++){var an=t/24*Math.PI*2;h+='<line x1="'+(590+Math.cos(an)*212)+'" y1="'+(278+Math.sin(an)*212)+'" x2="'+(590+Math.cos(an)*224)+'" y2="'+(278+Math.sin(an)*224)+'" stroke="rgba(233,226,208,.14)"/>';}
+h+='</g><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+V.forEach(function(v,i){
+  var p=POS[i],mx=(p[0]+BX)/2+(p[1]<BY?-26:26),my=(p[1]+BY)/2+(p[0]<BX?22:-22);
+  h+='<path d="M'+BX+' '+BY+' Q'+mx+' '+my+' '+p[0]+' '+p[1]+'" fill="none" stroke="rgba(233,226,208,.16)" stroke-width="1" stroke-dasharray="3 7" class="lane"/>';
+});
+h+='<g id="beacon"><circle cx="590" cy="278" r="5" fill="#D9A441"/><circle cx="590" cy="278" r="14" fill="none" stroke="rgba(217,164,65,.5)" class="pulse p1"/><circle cx="590" cy="278" r="14" fill="none" stroke="rgba(217,164,65,.5)" class="pulse p2"/>'
+ +'<text x="590" y="318" text-anchor="middle" style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;letter-spacing:.18em;fill:#D9A441">IDC — PARENT</text>'
+ +'<text x="590" y="334" text-anchor="middle" style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;letter-spacing:.14em;fill:rgba(233,226,208,.4)">J. ISAAC · FOUNDER &amp; CEO</text></g>';
+h+='<style>.pulse{transform-origin:590px 278px;'+(RM?'opacity:.4;':'animation:pulse 3.4s ease-out infinite;')+'}.p2{animation-delay:1.7s}@keyframes pulse{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.6);opacity:0}}</style>';
+V.forEach(function(v,i){
+  var p=POS[i],s=STATUS[v.st];
+  h+='<g class="island-node" data-target="v-'+v.id+'" tabindex="0" role="link" aria-label="'+v.name+', '+s.label+'">'
+   +'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="46" fill="transparent"/>'+'<g class="blob" opacity=".75">'+contourGroup(v.seed,p[0],p[1],30,s.col)+'</g>'
+   +'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+s.col+'"/>'
+   +'<text x="'+p[0]+'" y="'+(p[1]+52)+'" text-anchor="middle">'+v.name.toUpperCase()+'</text>'
+   +'<text class="sub" x="'+p[0]+'" y="'+(p[1]+66)+'" text-anchor="middle">'+v.n+' PRODUCTS · '+s.label+'</text></g>';
+});
+H.innerHTML=h;
+H.addEventListener("click",function(e){var n=e.target.closest(".island-node");if(n)document.getElementById(n.dataset.target).scrollIntoView({behavior:RM?"auto":"smooth",block:"center"});});
+H.addEventListener("keydown",function(e){if(e.key==="Enter"){var n=e.target.closest(".island-node");if(n)document.getElementById(n.dataset.target).scrollIntoView({behavior:RM?"auto":"smooth",block:"center"});}});
+/* ---------- hero sea: drifting generative archipelago ---------- */
+function Sea(canvasId,light){
+  var cv=document.getElementById(canvasId),ctx=cv.getContext("2d"),W,H,DPR,visible=false,raf=null;
+  var mx=0,my=0,smx=0,smy=0;
+  var isles=V.map(function(v,i){
+    var rand=rng(v.seed*7);
+    return {seed:v.seed,ax:.1+ (i%5)*.2+rand()*.08, ay:i<5?.22+rand()*.14:.62+rand()*.16,
+            r:26+rand()*30, sp:.00006+rand()*.00008, ph:rand()*6.28, st:v.st};
+  });
+  function size(){DPR=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+  size();addEventListener("resize",size);
+  if(canvasId==="sea")addEventListener("mousemove",function(e){mx=(e.clientX/innerWidth-.5);my=(e.clientY/innerHeight-.5);});
+  function ring(seed,cx,cy,r,wob,col,wd){
+    var rand=rng(seed),N=40;
+    var a1=.14+rand()*.12,a2=.07+rand()*.08,p1=rand()*6.28,p2=rand()*6.28;
+    ctx.beginPath();
+    for(var i=0;i<=N;i++){var th=i/N*Math.PI*2;
+      var rr=r*(1+a1*Math.sin(3*th+p1)+a2*Math.sin(5*th+p2+wob));
+      var x=cx+Math.cos(th)*rr,y=cy+Math.sin(th)*rr*.8;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+    ctx.closePath();ctx.strokeStyle=col;ctx.lineWidth=wd;ctx.stroke();
+  }
+  var t0=performance.now();
+  function frame(now){
+    if(!visible)return;
+    var t=now-t0;
+    smx+=(mx-smx)*.04;smy+=(my-smy)*.04;
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle="rgba(233,226,208,.04)";ctx.lineWidth=1;
+    for(var gx=0;gx<W;gx+=Math.max(90,W/12)){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+    for(var gy=0;gy<H;gy+=Math.max(90,H/7)){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
+    var bx=W*.72+smx*-18, by=H*.46+smy*-14;
+    isles.forEach(function(s){
+      var cx=s.ax*W+Math.sin(t*s.sp+s.ph)*16+smx*-30;
+      var cy=s.ay*H+Math.cos(t*s.sp*1.3+s.ph)*12+smy*-22;
+      ctx.beginPath();ctx.setLineDash([3,8]);ctx.lineDashOffset=RM?0:-t*.012;
+      ctx.moveTo(bx,by);ctx.quadraticCurveTo((cx+bx)/2,(cy+by)/2-30,cx,cy);
+      ctx.strokeStyle="rgba(233,226,208,"+(light?".10":".07")+")";ctx.stroke();ctx.setLineDash([]);
+      var wob=RM?0:t*.00035;
+      ring(s.seed,cx,cy,s.r,wob,"rgba(233,226,208,"+(light?".22":".16")+")",1);
+      ring(s.seed+97,cx,cy,s.r*.62,wob,"rgba(233,226,208,"+(light?".16":".11")+")",1);
+      var ac=s.st==="live"?"rgba(217,164,65,.55)":s.st==="beta"?"rgba(63,184,175,.5)":"rgba(233,226,208,.25)";
+      ring(s.seed+194,cx,cy,s.r*.32,wob,ac,1.3);
+    });
+    ctx.beginPath();ctx.arc(bx,by,3.5,0,7);ctx.fillStyle="#D9A441";ctx.fill();
+    var pr=10+((t*.06)%46);
+    ctx.beginPath();ctx.arc(bx,by,pr,0,7);ctx.strokeStyle="rgba(217,164,65,"+Math.max(0,.5-pr/100)+")";ctx.stroke();
+    if(!RM)raf=requestAnimationFrame(frame);
+  }
+  new IntersectionObserver(function(en){
+    en.forEach(function(e){
+      if(e.isIntersecting){visible=true;if(RM){frame(performance.now());visible=false;}else{raf=requestAnimationFrame(frame);}}
+      else{visible=false;if(raf)cancelAnimationFrame(raf);}
+    });
+  },{threshold:.05}).observe(cv);
+  if(RM){size();frame(performance.now());}
+}
+Sea("sea",false);Sea("sea2",true);
+
+/* ---------- garnet wireframe: rhombic dodecahedron ---------- */
+(function(){
+  var svg=document.getElementById("gem"),verts=[],edges=[];
+  [[1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],[-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1],
+   [2,0,0],[-2,0,0],[0,2,0],[0,-2,0],[0,0,2],[0,0,-2]].forEach(function(v){verts.push(v);});
+  for(var i=8;i<14;i++)for(var j=0;j<8;j++){
+    var d=Math.pow(verts[i][0]-verts[j][0],2)+Math.pow(verts[i][1]-verts[j][1],2)+Math.pow(verts[i][2]-verts[j][2],2);
+    if(Math.abs(d-3)<.01)edges.push([i,j]);
+  }
+  var lines=edges.map(function(){
+    var l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("stroke","rgba(217,164,65,.75)");l.setAttribute("stroke-width","1.1");
+    svg.appendChild(l);return l;
+  });
+  var dots=verts.map(function(){
+    var c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("r","2.4");c.setAttribute("fill","rgba(233,226,208,.85)");
+    svg.appendChild(c);return c;
+  });
+  var visible=false;
+  function render(t){
+    var ry=t*.00035,rx=.5+Math.sin(t*.0002)*.18,S=62,P=[];
+    verts.forEach(function(v){
+      var x=v[0]*Math.cos(ry)-v[2]*Math.sin(ry), z=v[0]*Math.sin(ry)+v[2]*Math.cos(ry);
+      var y=v[1]*Math.cos(rx)-z*Math.sin(rx); z=v[1]*Math.sin(rx)+z*Math.cos(rx);
+      var pers=1+z*.07;
+      P.push([170+x*S*pers,170+y*S*pers,z]);
+    });
+    edges.forEach(function(e,i){
+      var a=P[e[0]],b=P[e[1]],depth=(a[2]+b[2])/2;
+      lines[i].setAttribute("x1",a[0].toFixed(1));lines[i].setAttribute("y1",a[1].toFixed(1));
+      lines[i].setAttribute("x2",b[0].toFixed(1));lines[i].setAttribute("y2",b[1].toFixed(1));
+      lines[i].setAttribute("opacity",(0.32+ (depth+2)/4*.6).toFixed(2));
+    });
+    P.forEach(function(p,i){dots[i].setAttribute("cx",p[0].toFixed(1));dots[i].setAttribute("cy",p[1].toFixed(1));dots[i].setAttribute("opacity",(0.3+(p[2]+2)/4*.7).toFixed(2));});
+    if(visible&&!RM)requestAnimationFrame(render);
+  }
+  new IntersectionObserver(function(en){en.forEach(function(e){
+    if(e.isIntersecting){visible=true;requestAnimationFrame(render);}else visible=false;
+  });},{threshold:.1}).observe(svg);
+  render(1200);
+})();
+
+/* ---------- counters + scroll reveals ---------- */
+var counted=false;
+function runCounters(){
+  if(counted)return;counted=true;
+  document.querySelectorAll("[data-count]").forEach(function(el){
+    var target=+el.dataset.count,suf=el.dataset.suffix||"",raw=el.dataset.raw;
+    if(RM){el.innerHTML=(raw?target:target.toLocaleString())+(suf?'<sup>'+suf+'</sup>':'');return;}
+    var t0=null;
+    function step(ts){
+      if(!t0)t0=ts;var p=Math.min((ts-t0)/1400,1);p=1-Math.pow(1-p,3);
+      var val=Math.round(target*p);
+      el.innerHTML=(raw?val:val.toLocaleString())+(suf?'<sup>'+suf+'</sup>':'');
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting)runCounters();});},{threshold:.3}).observe(document.querySelector(".telemetry"));
+setTimeout(runCounters,2600);
+
+var ro=new IntersectionObserver(function(en){
+  en.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");ro.unobserve(e.target);}});
+},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".reveal").forEach(function(el,i){el.style.transitionDelay=(i%4)*0.07+"s";ro.observe(el);});
+})();
+</script>
+</body>
+</html>
