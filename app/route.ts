@@ -4,7 +4,7 @@ import path from "node:path";
 export const dynamic = "force-static";
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), "public", "agent-edge-vault-rebuild.html");
+  const filePath = path.join(process.cwd(), "public", "agentpact-flagship.html");
   const html = await readFile(filePath, "utf8");
 
   return new Response(html, {

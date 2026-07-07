@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPact — Typed, Routed, Verifiable, Payable Intelligence for Agents</title>
+<meta name="description" content="AgentPact is the agent economy suite from Island Development Crew: an open format (AGIF), an intent router, cryptographic provenance, and a live HTTP 402 endpoint agents can pay for. Try the routing demo.">
+<link rel="canonical" href="https://agent-edge-vault-site.vercel.app">
+<meta property="og:title" content="AgentPact — the trust layer for agent intelligence">
+<meta property="og:description" content="Open AGIF spec, live routing playground, SHA-256 provenance, and a working agent-payable endpoint. Zero fabricated metrics.">
+<meta property="og:url" content="https://agent-edge-vault-site.vercel.app">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0C151D;
+  --deep:#101C26;
+  --panel:#13212D;
+  --bone:#E9E2D0;
+  --bone-dim:rgba(233,226,208,.58);
+  --bone-faint:rgba(233,226,208,.32);
+  --line:rgba(233,226,208,.13);
+  --line-soft:rgba(233,226,208,.07);
+  --teal:#3FB8AF;
+  --teal-dim:rgba(63,184,175,.45);
+  --coral:#E2654A;
+  --gold:#D9A441;
+  --ok:#6FBF73;
+  --display:'Fraunces',serif;
+  --body:'Archivo',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--teal);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--teal);opacity:.7}
+h2.sec{font-family:var(--display);font-weight:500;font-size:clamp(2rem,4.2vw,3.2rem);line-height:1.08;letter-spacing:-.015em;margin:20px 0 16px}
+h2.sec em{font-style:italic;color:var(--teal)}
+.lede{color:var(--bone-dim);max-width:640px;font-size:17.5px}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:3px;border:1px solid;display:inline-block}
+.chip.lab{color:var(--bone-faint);border-color:var(--line)}
+.chip.teal{color:var(--teal);border-color:var(--teal-dim)}
+.chip.coral{color:var(--coral);border-color:rgba(226,101,74,.5)}
+.chip.ok{color:var(--ok);border-color:rgba(111,191,115,.5)}
+.chip.gold{color:var(--gold);border-color:rgba(217,164,65,.5)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+section{padding:110px 0;position:relative}
+.route{height:1px;max-width:1240px;margin:0 auto;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px)}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(12,21,29,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+.navin{max-width:1240px;margin:0 auto;padding:0 32px;height:66px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600}
+.brand .mark{width:30px;height:30px;border:1.4px solid var(--teal);border-radius:50%;display:grid;place-items:center;position:relative}
+.brand .mark::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal)}
+.brand small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--bone-faint);font-weight:400}
+.navlinks{display:flex;gap:22px;margin-left:auto;font-size:14.5px;color:var(--bone-dim)}
+.navlinks a:hover{color:var(--bone)}
+.navcta{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;border:1px solid var(--teal);color:var(--teal);padding:9px 18px;border-radius:3px;transition:background .25s,color .25s}
+.navcta:hover{background:var(--teal);color:var(--ink)}
+
+/* ---------- hero ---------- */
+header{position:relative;padding:150px 0 80px;overflow:hidden}
+#radar{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.heroveil{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(12,21,29,.1),rgba(12,21,29,.88) 72%)}
+.heroin{position:relative;z-index:2}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--bone-faint);display:flex;gap:20px;flex-wrap:wrap;margin-bottom:26px;justify-content:center}
+.kicker b{color:var(--teal);font-weight:500}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(2.7rem,6.6vw,5.2rem);line-height:1.02;letter-spacing:-.022em;text-align:center;max-width:20ch;margin:0 auto}
+h1 em{font-style:italic;color:var(--teal)}
+.herosub{margin:26px auto 30px;max-width:680px;color:var(--bone-dim);font-size:18px;text-align:center}
+.statline{display:flex;justify-content:center;gap:0;flex-wrap:wrap;margin:0 auto 56px;border:1px solid var(--line);border-radius:6px;max-width:900px;background:rgba(16,28,38,.6)}
+.statline>div{padding:16px 22px;border-right:1px solid var(--line);flex:1;min-width:150px;text-align:center}
+.statline>div:last-child{border-right:none}
+.statline .n{font-family:var(--display);font-size:26px;font-weight:500}
+.statline .n i{font-style:normal;color:var(--teal)}
+.statline .l{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-faint);margin-top:2px}
+.statline a{display:block}
+.statline a:hover .n{color:var(--teal)}
+
+/* ---------- layer map ---------- */
+.layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:18px;margin-top:50px}
+.layer{border:1px solid var(--line);border-radius:8px;background:var(--deep);padding:24px;position:relative;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;display:block}
+.layer:hover{transform:translateY(-4px);border-color:var(--teal-dim);box-shadow:0 18px 50px rgba(63,184,175,.09)}
+.layer:active{transform:translateY(-1px)}
+.layer .ln{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--teal);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.layer h4{font-family:var(--display);font-weight:500;font-size:22px;margin-bottom:8px}
+.layer p{font-size:14px;color:var(--bone-dim)}
+.layer .goto{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--bone-faint);margin-top:16px;display:block}
+.layer:hover .goto{color:var(--teal)}
+
+/* ---------- routing playground ---------- */
+.playbox{border:1px solid var(--line);border-radius:8px;background:var(--deep);overflow:hidden;position:relative}
+.playhead{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--bone-faint);flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--coral);display:inline-block}
+.dot.on{background:var(--ok);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.35}}
+.playhead .sp{flex:1}
+.playctl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;border:1px solid var(--line);color:var(--bone-dim);padding:6px 14px;border-radius:3px;transition:border-color .2s,color .2s}
+.playctl:hover{border-color:var(--teal);color:var(--teal)}
+.playgrid{display:grid;grid-template-columns:300px 1fr 1fr;min-height:520px}
+.pcol{padding:22px;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.pcol:last-child{border-right:none}
+.pcol h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-faint);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.pcol h5 b{color:var(--teal);font-weight:500}
+.ctl-group{margin-bottom:20px}
+.ctl-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--bone-dim);text-transform:uppercase;margin-bottom:9px;display:flex;justify-content:space-between}
+.ctl-label output{color:var(--teal)}
+.togglerow{display:flex;flex-wrap:wrap;gap:7px}
+.tg{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:5px 11px;border-radius:3px;border:1px solid var(--line);color:var(--bone-faint);transition:all .2s}
+.tg.on{border-color:var(--teal-dim);color:var(--teal);background:rgba(63,184,175,.08)}
+input[type=range]{width:100%;accent-color:var(--teal);background:transparent}
+.jsonbtn{width:100%;margin-top:auto;font-family:var(--mono);font-size:11px;letter-spacing:.12em;border:1px dashed var(--line);color:var(--bone-dim);padding:10px;border-radius:3px;transition:all .2s}
+.jsonbtn:hover{border-color:var(--teal);color:var(--teal)}
+.lanecount{font-family:var(--mono);font-size:10.5px;color:var(--bone-faint);letter-spacing:.1em}
+.stream{flex:1;overflow:hidden;position:relative;display:flex;flex-direction:column;gap:8px}
+.sig{border:1px solid var(--line);border-radius:4px;padding:9px 12px;font-family:var(--mono);font-size:11px;background:var(--panel);animation:sigin .4s ease;line-height:1.5}
+@keyframes sigin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.sig .t1{display:flex;justify-content:space-between;gap:8px}
+.sig .ty{color:var(--bone);letter-spacing:.04em}
+.sig .cf{color:var(--bone-faint)}
+.sig .t2{color:var(--bone-faint);font-size:10.5px;display:flex;justify-content:space-between;gap:8px}
+.sig.routed{border-color:var(--teal-dim);background:rgba(63,184,175,.07)}
+.sig.routed .ty{color:var(--teal)}
+.sig.dropped{opacity:.38}
+.sig.dropped .ty{text-decoration:line-through;text-decoration-color:rgba(226,101,74,.6)}
+.noise{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--bone-faint);display:flex;justify-content:space-between}
+.noise b{color:var(--teal);font-weight:500}
+#profilejson{display:none;border-top:1px solid var(--line);background:var(--ink);padding:18px 22px;position:relative}
+#profilejson.open{display:block}
+#profilejson pre{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--bone-dim);overflow-x:auto}
+.key{color:var(--teal)}.str{color:var(--gold)}.num{color:var(--coral)}.com{color:rgba(233,226,208,.3);font-style:italic}
+.copybtn{position:absolute;top:14px;right:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;border:1px solid var(--line);padding:5px 12px;border-radius:3px;color:var(--bone-dim);transition:all .2s}
+.copybtn:hover{border-color:var(--teal);color:var(--teal)}
+.playcap{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--bone-faint);margin-top:16px}
+
+/* ---------- problem cards ---------- */
+.probgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:22px;margin-top:50px}
+.prob{border-top:1px solid var(--line);padding-top:20px}
+.prob .pn{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--coral);margin-bottom:10px}
+.prob h4{font-family:var(--display);font-weight:500;font-size:21px;margin-bottom:8px}
+.prob p{font-size:14.5px;color:var(--bone-dim)}
+
+/* ---------- schema explorer ---------- */
+.schemabox{margin-top:50px;border:1px solid var(--line);border-radius:8px;background:var(--deep);overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:.1em;padding:14px 22px;color:var(--bone-faint);border-right:1px solid var(--line);transition:all .2s}
+.tab.on{color:var(--teal);background:rgba(63,184,175,.06);box-shadow:inset 0 -2px 0 var(--teal)}
+.tab:hover{color:var(--bone)}
+.tabpane{display:none;padding:24px 26px;position:relative}
+.tabpane.on{display:block}
+.tabpane pre{font-family:var(--mono);font-size:12.5px;line-height:1.75;color:var(--bone-dim);overflow-x:auto}
+.tabnote{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--bone-faint);border-top:1px dashed var(--line);margin-top:18px;padding-top:14px}
+.specctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
+
+/* ---------- provenance ---------- */
+.provsplit{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;margin-top:50px;align-items:start}
+.provchain{display:flex;flex-direction:column;gap:0}
+.pnode{border:1px solid var(--line);border-radius:6px;background:var(--deep);padding:16px 18px;font-family:var(--mono);font-size:12px}
+.pnode .pt{letter-spacing:.16em;font-size:10.5px;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+.pnode .ph{color:var(--bone-faint);font-size:11px;word-break:break-all;line-height:1.5}
+.plink{width:1px;height:26px;margin-left:30px;background:repeating-linear-gradient(180deg,var(--teal-dim) 0 4px,transparent 4px 8px)}
+.verifybox{border:1px solid var(--line);border-radius:8px;background:var(--deep);padding:26px}
+.verifybox h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-faint);margin-bottom:16px}
+.payload{font-family:var(--mono);font-size:12px;line-height:1.7;background:var(--ink);border:1px solid var(--line);border-radius:4px;padding:16px;color:var(--bone-dim);margin-bottom:16px;overflow-x:auto}
+.payload .mut{color:var(--coral)}
+.vrow{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.vbtn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;background:var(--teal);color:var(--ink);font-weight:500;padding:11px 22px;border-radius:3px;transition:transform .2s,background .2s}
+.vbtn:hover{transform:translateY(-2px);background:#54CDC4}
+.vbtn:active{transform:translateY(0)}
+.tbtn{font-family:var(--mono);font-size:12px;letter-spacing:.1em;border:1px solid rgba(226,101,74,.5);color:var(--coral);padding:11px 22px;border-radius:3px;transition:all .2s}
+.tbtn:hover{background:rgba(226,101,74,.1)}
+.vresult{margin-top:18px;font-family:var(--mono);font-size:12px;line-height:1.8;border-radius:4px;padding:14px 16px;display:none}
+.vresult.ok{display:block;border:1px solid rgba(111,191,115,.4);color:var(--ok);background:rgba(111,191,115,.06)}
+.vresult.bad{display:block;border:1px solid rgba(226,101,74,.5);color:var(--coral);background:rgba(226,101,74,.06)}
+.vresult .hh{color:var(--bone-faint);word-break:break-all;font-size:11px}
+
+/* ---------- feed / paywall ---------- */
+.feed{background:var(--deep);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.feedgrid{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;margin-top:50px;align-items:start}
+.termbox{border:1px solid var(--line);border-radius:8px;background:var(--ink);overflow:hidden}
+.termhead{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--bone-faint)}
+.termhead .tdots{display:flex;gap:6px}
+.termhead .tdots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.termbody{padding:18px;font-family:var(--mono);font-size:12px;line-height:1.75;color:var(--bone-dim);overflow-x:auto;min-height:290px;max-height:420px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
+.termbody .tcmd{color:var(--bone)}
+.termbody .t402{color:var(--coral)}
+.termbody .t200{color:var(--ok)}
+.feedctas{display:flex;gap:12px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line)}
+.keyinput{flex:1;min-width:180px;font-family:var(--mono);font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:3px;color:var(--bone);padding:9px 12px}
+.keyinput::placeholder{color:var(--bone-faint)}
+.pricecard{border:1px solid var(--line);border-radius:8px;background:var(--ink);padding:28px}
+.pricecard .php{font-family:var(--display);font-size:42px;font-weight:500;margin:14px 0 2px}
+.pricecard .php small{font-size:16px;color:var(--bone-dim);font-family:var(--body)}
+.pricecard ul{list-style:none;margin:18px 0 24px}
+.pricecard li{font-size:14px;color:var(--bone-dim);padding:8px 0;border-bottom:1px dashed var(--line-soft);display:flex;gap:10px}
+.pricecard li::before{content:"+";color:var(--teal);font-family:var(--mono)}
+.x402row{margin-top:18px;border:1px dashed var(--line);border-radius:6px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--bone-faint)}
+.x402row b{color:var(--gold);font-weight:500}
+
+/* ---------- skills + memory ---------- */
+.duogrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:50px}
+.duo{border:1px solid var(--line);border-radius:8px;padding:28px;background:var(--deep)}
+.duo h4{font-family:var(--display);font-weight:500;font-size:23px;margin:12px 0 10px}
+.duo p{font-size:14.5px;color:var(--bone-dim);margin-bottom:14px}
+.duo .mini{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--bone-faint);line-height:2}
+.duo .mini a{color:var(--teal)}
+.duo .mini a:hover{text-decoration:underline}
+
+/* ---------- moat ---------- */
+.moatgrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:50px}
+.mcol{border:1px solid var(--line);border-radius:8px;padding:28px;background:var(--deep)}
+.mcol.win{border-color:var(--teal-dim)}
+.mcol h4{font-family:var(--display);font-weight:500;font-size:23px;margin:12px 0 16px}
+.mcol ul{list-style:none}
+.mcol li{font-size:14.5px;color:var(--bone-dim);padding:9px 0;border-bottom:1px dashed var(--line-soft);display:flex;gap:12px}
+.mcol li::before{content:"—";color:var(--bone-faint);font-family:var(--mono)}
+.mcol.win li::before{content:"+";color:var(--teal)}
+
+/* ---------- roadmap ---------- */
+.phases{margin-top:50px;display:flex;flex-direction:column}
+.phase{display:grid;grid-template-columns:140px 1fr auto;gap:26px;padding:26px 0;border-top:1px solid var(--line);align-items:baseline}
+.phase:last-child{border-bottom:1px solid var(--line)}
+.phase .pid{font-family:var(--mono);font-size:12px;letter-spacing:.18em;color:var(--teal)}
+.phase h4{font-family:var(--display);font-weight:500;font-size:22px;margin-bottom:6px}
+.phase p{font-size:14.5px;color:var(--bone-dim);max-width:62ch}
+
+/* ---------- cta + footer ---------- */
+.cta{text-align:center;padding:140px 0}
+.cta h2{font-family:var(--display);font-weight:500;font-size:clamp(2.4rem,5.4vw,4.2rem);letter-spacing:-.02em;line-height:1.05;margin-bottom:18px}
+.cta h2 em{font-style:italic;color:var(--teal)}
+.cta p{color:var(--bone-dim);max-width:560px;margin:0 auto 36px}
+.btn{font-family:var(--mono);font-size:13px;letter-spacing:.08em;padding:14px 26px;border-radius:3px;display:inline-flex;align-items:center;gap:10px;transition:transform .25s,background .25s,color .25s,border-color .25s}
+.btn.teal{background:var(--teal);color:var(--ink);font-weight:500}
+.btn.teal:hover{transform:translateY(-2px);background:#54CDC4}
+.btn.teal:active{transform:translateY(0)}
+.btn.ghost{border:1px solid var(--line);color:var(--bone-dim)}
+.btn.ghost:hover{border-color:var(--bone-dim);color:var(--bone);transform:translateY(-2px)}
+.btn.ghost:active{transform:translateY(0)}
+.ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+footer{border-top:1px solid var(--line-soft);padding:42px 0;background:var(--ink)}
+.footin{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.fmeta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--bone-faint)}
+.fmeta a{color:var(--gold)}
+.flinks{display:flex;gap:20px;font-size:13.5px;color:var(--bone-dim);flex-wrap:wrap}
+.flinks a:hover{color:var(--teal)}
+
+@media (max-width:1020px){.playgrid{grid-template-columns:1fr}.pcol{border-right:none;border-bottom:1px solid var(--line)}.pcol:last-child{border-bottom:none}.provsplit,.moatgrid,.duogrid,.feedgrid{grid-template-columns:1fr}.phase{grid-template-columns:1fr;gap:8px}}
+@media (max-width:900px){.navlinks{display:none}section{padding:80px 0}header{padding-top:120px}}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="navin">
+    <a class="brand" href="#top">
+      <span class="mark" aria-hidden="true"></span>
+      <span>AgentPact<small>ISLAND DEVELOPMENT CREW</small></span>
+    </a>
+    <div class="navlinks">
+      <a href="#play">Live Demo</a>
+      <a href="#spec">AGIF Spec</a>
+      <a href="#provenance">Provenance</a>
+      <a href="#feed">Feed + API</a>
+      <a href="#skills">Skills</a>
+      <a href="#roadmap">Roadmap</a>
+    </div>
+    <a class="navcta" href="#join">BECOME A DESIGN PARTNER</a>
+  </div>
+</nav>
+
+<header id="top">
+  <canvas id="radar" aria-hidden="true"></canvas>
+  <div class="heroveil" aria-hidden="true"></div>
+  <div class="wrap heroin">
+    <div class="kicker">
+      <span>AGENTPACT · THE AGENT ECONOMY SUITE</span>
+      <span><b>STATUS: SPEC SHIPPED · FEED LIVE · PAYWALL LIVE</b></span>
+      <span>HUNTSVILLE, AL</span>
+    </div>
+    <h1>Intelligence your agent can <em>verify — and pay for.</em></h1>
+    <p class="herosub">AgentPact is one product in four layers: an open format (AGIF), an intent-based router, a cryptographic provenance standard, and a live HTTP&nbsp;402 endpoint that autonomous agents can buy access to. Not another data feed — the trust layer that makes any feed safe to act on.</p>
+    <div class="statline">
+      <a href="https://github.com/Navigata1/agif-spec"><div class="n">v0.1</div><div class="l">Open spec · on GitHub</div></a>
+      <div><div class="n">14</div><div class="l">Typed signal classes</div></div>
+      <div><div class="n" id="vaultcount">15</div><div class="l">Real signals in vault</div></div>
+      <a href="#feed"><div class="n">402</div><div class="l">Live payable endpoint</div></a>
+      <div><div class="n"><i>0</i></div><div class="l">Fabricated metrics</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= LAYER MAP ================= -->
+<section id="layers" style="padding-top:20px;padding-bottom:70px">
+  <div class="wrap">
+    <div class="eyebrow reveal">One Product · Four Layers</div>
+    <h2 class="sec reveal">The suite, <em>consolidated.</em></h2>
+    <p class="lede reveal">Five overnight prototypes became one honest product. Each layer below is real, statused plainly, and linked to the thing itself — no ghost products, no invented counts.</p>
+    <div class="layers">
+      <a class="layer reveal" href="#spec">
+        <div class="ln">L1 · EDGE <span class="chip ok">SHIPPED</span></div>
+        <h4>The AGIF spec</h4>
+        <p>Typed signals, intent profiles, provenance chains. MIT-licensed, versioned, open comment window.</p>
+        <span class="goto">READ THE SPEC ↓</span>
+      </a>
+      <a class="layer reveal" href="#feed">
+        <div class="ln">L2 · FEED <span class="chip ok">LIVE · 402</span></div>
+        <h4>Signal Forge</h4>
+        <p>AGIF-typed signal streams behind a working paywall. Unpaid request → HTTP 402. Paid key → typed, signed intelligence.</p>
+        <span class="goto">CALL THE ENDPOINT ↓</span>
+      </a>
+      <a class="layer reveal" href="#skills">
+        <div class="ln">L3 · SKILLS <span class="chip teal">CATALOG LIVE</span></div>
+        <h4>Skill Bazaar</h4>
+        <p>A curated catalog of real, working agent skills and frameworks from the IDC shop — honest counts, real install commands.</p>
+        <span class="goto">BROWSE THE BAZAAR ↓</span>
+      </a>
+      <a class="layer reveal" href="#memory">
+        <div class="ln">L4 · MEMORY <span class="chip lab">DECISION GATE</span></div>
+        <h4>Context Engine</h4>
+        <p>Agent memory taxonomy — episodic, semantic, procedural. Parked until feed revenue data makes the build case.</p>
+        <span class="goto">HONEST STATUS ↓</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PLAYGROUND ================= -->
+<section id="play" style="padding-top:30px">
+  <div class="wrap">
+    <div class="eyebrow reveal">L1 · Live Routing Playground · Real Logic, Running Now</div>
+    <h2 class="sec reveal">Declare intent. <em>Watch the noise die.</em></h2>
+    <p class="lede reveal">This is the core of the product, working in your browser: a stream of AGIF-typed signals, filtered in real time by the intent profile you build on the left. The controls emit valid profile JSON — copy it out, or send it straight to the live endpoint below.</p>
+
+    <div class="playbox reveal" style="margin-top:46px">
+      <div class="playhead">
+        <span class="dot on" id="livedot"></span><span id="livelabel">STREAM ACTIVE · SYNTHETIC SIGNALS</span>
+        <span class="sp"></span>
+        <button class="playctl" id="pausebtn">PAUSE</button>
+      </div>
+      <div class="playgrid">
+        <div class="pcol">
+          <h5><b>01</b> INTENT PROFILE</h5>
+          <div class="ctl-group">
+            <div class="ctl-label">Domains</div>
+            <div class="togglerow" id="domains"></div>
+          </div>
+          <div class="ctl-group">
+            <div class="ctl-label">Signal types</div>
+            <div class="togglerow" id="types"></div>
+          </div>
+          <div class="ctl-group">
+            <div class="ctl-label"><span>Min confidence</span><output id="confout">0.70</output></div>
+            <input type="range" id="conf" min="0" max="99" step="1" value="70" aria-label="Minimum confidence threshold">
+          </div>
+          <div class="ctl-group">
+            <div class="ctl-label">Watchlist entities</div>
+            <div class="togglerow" id="entities"></div>
+          </div>
+          <button class="jsonbtn" id="jsontoggle">VIEW PROFILE AS AGIF JSON ▾</button>
+        </div>
+        <div class="pcol">
+          <h5><b>02</b> INCOMING STREAM <span class="sp"></span><span class="lanecount" id="incount">0 RECEIVED</span></h5>
+          <div class="stream" id="instream"></div>
+          <div class="noise"><span>RAW FIREHOSE</span><span id="inrate">~1 SIGNAL / 1.6s</span></div>
+        </div>
+        <div class="pcol">
+          <h5><b>03</b> ROUTED TO YOUR AGENT <span class="sp"></span><span class="lanecount" id="outcount">0 ROUTED</span></h5>
+          <div class="stream" id="outstream"></div>
+          <div class="noise"><span>NOISE SUPPRESSED</span><b id="noisepct">0%</b></div>
+        </div>
+      </div>
+      <div id="profilejson">
+        <button class="copybtn" id="copyprofile">COPY JSON</button>
+        <pre id="profilepre"></pre>
+      </div>
+    </div>
+    <p class="playcap reveal">SIGNALS IN THIS DEMO ARE SYNTHETIC AND GENERATED CLIENT-SIDE — THE ROUTING LOGIC IS THE REAL REFERENCE IMPLEMENTATION. THE VAULT BELOW SERVES REAL ONES.</p>
+  </div>
+</section>
+
+<div class="route"></div>
+
+<!-- ================= PROBLEM ================= -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow reveal" style="color:var(--coral)">The Problem</div>
+    <h2 class="sec reveal">Feeds were built for analysts. <em>Agents are not analysts.</em></h2>
+    <div class="probgrid">
+      <div class="prob reveal"><div class="pn">FAILURE 01</div><h4>Untyped payloads</h4><p>A human reads a headline and infers. An agent parsing freeform JSON guesses — and a guessing agent with execution authority is a liability, not an asset.</p></div>
+      <div class="prob reveal"><div class="pn">FAILURE 02</div><h4>Firehose economics</h4><p>Feeds bill for volume, so they ship volume. Your agent burns context window and inference cost discarding 99% of what it paid to receive.</p></div>
+      <div class="prob reveal"><div class="pn">FAILURE 03</div><h4>Unverifiable origin</h4><p>No signature, no chain of custody, no confidence score. An agent acting on unprovenanced data can't tell intelligence from injection.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPEC ================= -->
+<section id="spec" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow reveal">L1 · The Wedge · AGIF v0.1 — Now Public</div>
+    <h2 class="sec reveal">One format. <em>Any feed becomes agent-safe.</em></h2>
+    <p class="lede reveal">AGIF — the Agent Intelligence Format — is an open, versioned schema for machine-consumable intelligence, now published with JSON Schemas, a zero-dependency validator, and CI. Three core objects do the work. Explore the draft below; every block is copyable.</p>
+    <div class="schemabox reveal">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-pane="p1" role="tab">signal</button>
+        <button class="tab" data-pane="p2" role="tab">intent_profile</button>
+        <button class="tab" data-pane="p3" role="tab">provenance</button>
+      </div>
+      <div class="tabpane on" id="p1">
+        <pre>{
+  <span class="key">"agif"</span>: <span class="str">"0.1"</span>,                      <span class="com">// spec version — always present, always first</span>
+  <span class="key">"id"</span>: <span class="str">"sig_7f3a9c"</span>,                <span class="com">// globally unique, sortable</span>
+  <span class="key">"type"</span>: <span class="str">"price_move"</span>,              <span class="com">// one of 14 typed classes, closed enum</span>
+  <span class="key">"domain"</span>: <span class="str">"finance"</span>,               <span class="com">// routing namespace</span>
+  <span class="key">"entity"</span>: <span class="str">"NVDA"</span>,                  <span class="com">// named subject, normalized</span>
+  <span class="key">"value"</span>: { <span class="key">"pct"</span>: <span class="num">-4.2</span>, <span class="key">"window_s"</span>: <span class="num">300</span> },   <span class="com">// payload typed BY signal class</span>
+  <span class="key">"confidence"</span>: <span class="num">0.91</span>,                <span class="com">// 0–1, ML-scored upstream</span>
+  <span class="key">"ts"</span>: <span class="num">1781171526904</span>,               <span class="com">// epoch ms</span>
+  <span class="key">"provenance"</span>: <span class="str">"prv_e21b…"</span>          <span class="com">// pointer into the hash chain →</span>
+}</pre>
+        <div class="tabnote">TYPED PAYLOADS MEAN AN AGENT NEVER PARSES PROSE. IT SWITCHES ON <span style="color:var(--teal)">type</span> AND TRUSTS THE SHAPE.</div>
+      </div>
+      <div class="tabpane" id="p2">
+        <pre>{
+  <span class="key">"agif"</span>: <span class="str">"0.1"</span>,
+  <span class="key">"agent_id"</span>: <span class="str">"agent_prod_7a3f"</span>,
+  <span class="key">"domains"</span>: [<span class="str">"finance"</span>, <span class="str">"competitive"</span>],   <span class="com">// subscribe by namespace</span>
+  <span class="key">"signal_types"</span>: [<span class="str">"price_move"</span>, <span class="str">"news_event"</span>],
+  <span class="key">"entities"</span>: [<span class="str">"NVDA"</span>, <span class="str">"TSLA"</span>],             <span class="com">// empty array = all entities</span>
+  <span class="key">"min_confidence"</span>: <span class="num">0.70</span>,                  <span class="com">// router-enforced floor</span>
+  <span class="key">"delivery"</span>: <span class="str">"at_least_once"</span>
+}</pre>
+        <div class="tabnote">THIS IS THE EXACT OBJECT THE PLAYGROUND ABOVE EMITS — AND THE QUERY CONTRACT THE LIVE ENDPOINT ENFORCES.</div>
+      </div>
+      <div class="tabpane" id="p3">
+        <pre>{
+  <span class="key">"agif"</span>: <span class="str">"0.1"</span>,
+  <span class="key">"id"</span>: <span class="str">"prv_e21b4d"</span>,
+  <span class="key">"source"</span>: <span class="str">"curated:idc_research"</span>,       <span class="com">// where it entered the world</span>
+  <span class="key">"chain"</span>: [                               <span class="com">// every transform, hashed</span>
+    { <span class="key">"op"</span>: <span class="str">"ingest"</span>,    <span class="key">"sha256"</span>: <span class="str">"9f2c…"</span> },
+    { <span class="key">"op"</span>: <span class="str">"normalize"</span>, <span class="key">"sha256"</span>: <span class="str">"b7a1…"</span> },
+    { <span class="key">"op"</span>: <span class="str">"score"</span>,     <span class="key">"sha256"</span>: <span class="str">"e4d8…"</span> }
+  ],
+  <span class="key">"payload_sha256"</span>: <span class="str">"…"</span>                   <span class="com">// verify before acting — demo below ↓</span>
+}</pre>
+        <div class="tabnote">A SIGNAL WITHOUT A VALID CHAIN IS DISCARDED BY POLICY. TRUST IS COMPUTED, NOT ASSUMED.</div>
+      </div>
+    </div>
+    <div class="specctas reveal">
+      <a class="btn teal" href="https://github.com/Navigata1/agif-spec">READ THE SPEC ON GITHUB →</a>
+      <a class="btn ghost" href="https://github.com/Navigata1/agif-spec/blob/main/validators/validate.mjs">GET THE VALIDATOR</a>
+      <a class="btn ghost" href="https://github.com/Navigata1/agif-spec/issues/new/choose">COMMENT ON THE DRAFT</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROVENANCE ================= -->
+<section id="provenance">
+  <div class="wrap">
+    <div class="eyebrow reveal">L1 · Provenance · Working Demo</div>
+    <h2 class="sec reveal">Signals with <em>receipts.</em></h2>
+    <p class="lede reveal">Every AGIF signal carries a hash chain from ingestion to delivery. Below is a real verification: the button computes SHA-256 over the payload in your browser and checks it against the recorded hash. Tamper with the payload and watch trust collapse — exactly as your agent would.</p>
+    <div class="provsplit">
+      <div class="provchain reveal">
+        <div class="pnode"><div class="pt">Origin · ingest</div><div class="ph">source: curated:idc_research<br>sha256: 9f2c41a8d07e63b1…</div></div>
+        <div class="plink" aria-hidden="true"></div>
+        <div class="pnode"><div class="pt">Transform · normalize</div><div class="ph">op: event → news_event<br>sha256: b7a19e44c2f08d35…</div></div>
+        <div class="plink" aria-hidden="true"></div>
+        <div class="pnode"><div class="pt">Transform · score</div><div class="ph">model: conf_v2 · score: 0.91<br>sha256: e4d8f203a91b67c4…</div></div>
+        <div class="plink" aria-hidden="true"></div>
+        <div class="pnode" style="border-color:var(--teal-dim)"><div class="pt" style="color:var(--teal)">Delivery · payload hash</div><div class="ph" id="recordedhash">recorded sha256: computing…</div></div>
+      </div>
+      <div class="verifybox reveal">
+        <h5>VERIFY BEFORE ACTING</h5>
+        <div class="payload" id="payloadview"></div>
+        <div class="vrow">
+          <button class="vbtn" id="verifybtn">VERIFY INTEGRITY</button>
+          <button class="tbtn" id="tamperbtn">TAMPER WITH PAYLOAD</button>
+        </div>
+        <div class="vresult" id="vresult" role="status"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEED / PAYWALL ================= -->
+<section class="feed" id="feed">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="color:var(--gold)">L2 · Signal Forge · The Feed Layer — Live</div>
+    <h2 class="sec reveal">An endpoint your agent <em>can actually pay.</em></h2>
+    <p class="lede reveal"><span style="color:var(--bone)">GET /v1/signals</span> serves real, curated, AGIF-typed signals about the agent economy — every one provenance-hashed, every one citable. No key? You get an honest HTTP 402 with payment instructions, machine-readable. That's not an error page; that's the product working. Try it right here — this page calls the real endpoint.</p>
+
+    <div class="feedgrid">
+      <div class="termbox reveal">
+        <div class="termhead"><span class="tdots"><i></i><i></i><i></i></span> LIVE REQUEST · SAME ORIGIN · NO MOCK</div>
+        <div class="termbody" id="feedterm"><span class="tcmd">$ curl https://agent-edge-vault-site.vercel.app/v1/signals</span>
+
+Press <span style="color:var(--teal)">CALL WITHOUT KEY</span> to run this request from your browser.</div>
+        <div class="feedctas">
+          <button class="vbtn" id="call402">CALL WITHOUT KEY → EXPECT 402</button>
+          <input class="keyinput" id="apikeyinput" placeholder="apk_live_… (paste a key)" aria-label="API key">
+          <button class="playctl" id="callauthed" style="border-color:var(--teal-dim);color:var(--teal)">CALL WITH KEY</button>
+        </div>
+      </div>
+      <div class="pricecard reveal">
+        <span class="chip gold">STARTER KEY · LAUNCH PRICING</span>
+        <div class="php">$19<small>/month</small></div>
+        <ul>
+          <li>1,000 requests/month to /v1/signals</li>
+          <li>Full AGIF v0.1 payloads with provenance chains</li>
+          <li>Intent-profile filtering: domain, type, entity, confidence</li>
+          <li>Usage ledger — every request accounted for</li>
+          <li>Key delivered instantly after checkout</li>
+        </ul>
+        <a class="btn teal" href="https://buy.stripe.com/test_aFa6oJ2Kd81oafQdvI0VO05" style="width:100%;justify-content:center">GET A STARTER KEY →</a>
+        <div class="x402row"><b>RAILS, PLAINLY:</b> Checkout runs on Stripe (test mode until GA flip — no card is charged today). The endpoint already speaks HTTP 402 with machine-readable payment instructions; x402 USDC-on-Base settlement is the planned v2 rail, and this page will say so when it's real — not before.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS + MEMORY ================= -->
+<section id="skills" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="eyebrow reveal">L3 + L4 · The Other Two Layers, Honestly</div>
+    <h2 class="sec reveal">Skills you can install. <em>Memory we won't fake.</em></h2>
+    <div class="duogrid" id="memory">
+      <div class="duo reveal">
+        <span class="chip teal">L3 · SKILL BAZAAR — CATALOG LIVE</span>
+        <h4>Real skills, real repos, real installs</h4>
+        <p>The Bazaar lists what the IDC shop actually ships — build orchestration, design pipelines, the AGIF validator — with install commands that work and counts pulled from GitHub, not imagination. Small catalog, every entry real.</p>
+        <div class="mini">
+          → <a href="https://skill-bazaar-site.vercel.app">skill-bazaar-site.vercel.app</a><br>
+          → Iron Canvas v4.1 · AGIF Spec · Build Orchestration · more
+        </div>
+      </div>
+      <div class="duo reveal">
+        <span class="chip lab">L4 · CONTEXT ENGINE — DECISION GATE</span>
+        <h4>Agent memory, parked on purpose</h4>
+        <p>The memory-taxonomy thinking (episodic / semantic / procedural) is good and we're keeping it. But we don't ship claims without code: Context Engine stays parked until /v1/signals revenue data justifies a thin, real MVP — or it folds into NeuralForge, where IDC's memory work actually lives.</p>
+        <div class="mini">
+          → Decision memo scheduled after first month of feed data<br>
+          → No SLAs, no compliance badges, until there's a product
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MOAT ================= -->
+<section id="moat">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="color:var(--gold)">Strategy · Said Plainly</div>
+    <h2 class="sec reveal">Data is a commodity. <em>The format is the moat.</em></h2>
+    <p class="lede reveal">Nobody out-feeds Bloomberg from Huntsville. But standards have a different physics: the spec that agents adopt first becomes the spec every feed must speak. Stripe never owned money — it owned the format for moving it. The rails for agent payments got built by giants in 2025; we ride them and own the format on top.</p>
+    <div class="moatgrid">
+      <div class="mcol reveal">
+        <span class="chip coral">THE GAME WE REFUSE</span>
+        <h4>Competing on data volume</h4>
+        <ul>
+          <li>Capital war against incumbents with exchange contracts</li>
+          <li>Margins compress to zero as sources commoditize</li>
+          <li>"10,000 sources" is unverifiable — and reads that way</li>
+          <li>Every customer asks: why not just use the originals?</li>
+        </ul>
+      </div>
+      <div class="mcol win reveal">
+        <span class="chip teal">THE GAME WE CAN WIN</span>
+        <h4>Owning the trust layer</h4>
+        <ul>
+          <li>Open spec — adoption compounds, MIT-licensed, live on GitHub</li>
+          <li>Reference router — the playground above is the canonical implementation</li>
+          <li>Provenance standard — the verification layer every serious agent needs</li>
+          <li>Paid proof — a 402 endpoint an agent can settle, today</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROADMAP ================= -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="eyebrow reveal">The Road From Spec to Network</div>
+    <h2 class="sec reveal">Honest status, <em>by phase.</em></h2>
+    <div class="phases">
+      <div class="phase reveal"><span class="pid">PHASE 01</span><div><h4>AGIF spec v0.1</h4><p>The three core objects — signal, intent profile, provenance — published as an open draft with JSON Schemas, a zero-dependency validator, CI, and a public comment window. The playground on this page is its living documentation.</p></div><span class="chip ok">SHIPPED · 2026-07-06</span></div>
+      <div class="phase reveal"><span class="pid">PHASE 02</span><div><h4>First paid surface — GET /v1/signals</h4><p>A real vault of curated, provenance-hashed signals behind HTTP 402. Stripe checkout issues metered keys; every request lands in a usage ledger. Small, real, typed — 15 honest signals beat 2,847 fake ones.</p></div><span class="chip ok">LIVE · TEST-MODE CHECKOUT</span></div>
+      <div class="phase reveal"><span class="pid">PHASE 03</span><div><h4>Reference router + TypeScript SDK</h4><p>The routing logic running in your browser right now, hardened and packaged: an in-memory intent matcher, the schema validators from the spec repo, and a client SDK with replay support.</p></div><span class="chip lab">IN THE LAB</span></div>
+      <div class="phase reveal"><span class="pid">PHASE 04</span><div><h4>Hosted vault + provenance network</h4><p>Managed AGIF streams over WebSocket with at-least-once delivery, then cross-publisher signature verification so intelligence from any AGIF-speaking source carries portable trust. The endgame — and the reason the spec comes first.</p></div><span class="chip lab">PLANNED</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="route"></div>
+
+<!-- ================= CTA ================= -->
+<section class="cta" id="join">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center">Design Partner Cohort · Small By Intent</div>
+    <h2 class="reveal">Help write the spec <em>your agents will speak.</em></h2>
+    <p class="reveal">We're onboarding a handful of agent builders to pressure-test AGIF v0.1 against real workloads. You bring an agent and opinions; we bring the format, the router, the vault, and fast iteration. Replies come from a human.</p>
+    <div class="ctas reveal">
+      <a class="btn teal" href="mailto:hello@islanddevcrew.com?subject=AgentPact%20%E2%80%94%20Design%20Partner&body=What%20my%20agent%20does%3A%0AWhat%20intelligence%20it%20needs%3A%0A">APPLY AS A DESIGN PARTNER</a>
+      <a class="btn ghost" href="https://islanddevcrew.com">EXPLORE ISLAND DEV CREW →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footin">
+    <div class="brand"><span class="mark" aria-hidden="true"></span><span style="font-size:14.5px">AgentPact<small>EDGE · FEED · SKILLS · MEMORY</small></span></div>
+    <div class="flinks"><a href="#play">Demo</a><a href="#spec">Spec</a><a href="#provenance">Provenance</a><a href="#feed">API</a><a href="https://github.com/Navigata1/agif-spec">GitHub</a><a href="mailto:hello@islanddevcrew.com">Contact</a></div>
+    <div class="fmeta">AN <a href="https://islanddevcrew.com">ISLAND DEVELOPMENT CREW</a> VENTURE · © 2026 ISLAND DEVELOPMENT CREW LLC · HUNTSVILLE, AL</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- radar sweep ---------- */
+(function(){
+  var cv=document.getElementById("radar"),ctx=cv.getContext("2d"),W,H,DPR,vis=false,raf;
+  function size(){DPR=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+  size();addEventListener("resize",size);
+  var blips=[];for(var i=0;i<26;i++)blips.push({a:Math.random()*6.28,r:.18+Math.random()*.78,s:1+Math.random()*2});
+  function frame(t){
+    if(!vis)return;
+    ctx.clearRect(0,0,W,H);
+    var cx=W/2,cy=H*0.18,R=Math.max(W,H)*0.75;
+    ctx.strokeStyle="rgba(233,226,208,.05)";ctx.lineWidth=1;
+    for(var k=1;k<=4;k++){ctx.beginPath();ctx.arc(cx,cy,R*k/4,0,7);ctx.stroke();}
+    for(var a=0;a<12;a++){var an=a/12*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(an)*R,cy+Math.sin(an)*R);ctx.stroke();}
+    var sweep=RM?2.1:t*0.00028;
+    var grad=ctx.createConicGradient?ctx.createConicGradient(sweep,cx,cy):null;
+    if(grad){grad.addColorStop(0,"rgba(63,184,175,.16)");grad.addColorStop(.08,"rgba(63,184,175,0)");grad.addColorStop(1,"rgba(63,184,175,0)");
+      ctx.fillStyle=grad;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,0,7);ctx.fill();}
+    blips.forEach(function(b){
+      var bx=cx+Math.cos(b.a)*b.r*R, by=cy+Math.sin(b.a)*b.r*R;
+      var diff=((b.a-sweep)%6.283+6.283)%6.283;
+      var glow=Math.max(0,1-diff/1.6);
+      ctx.beginPath();ctx.arc(bx,by,b.s,0,7);
+      ctx.fillStyle="rgba(63,184,175,"+(0.08+glow*0.6)+")";ctx.fill();
+    });
+    if(!RM)raf=requestAnimationFrame(frame);
+  }
+  new IntersectionObserver(function(en){en.forEach(function(e){
+    if(e.isIntersecting){vis=true;if(RM){frame(0);vis=false;}else raf=requestAnimationFrame(frame);}
+    else{vis=false;if(raf)cancelAnimationFrame(raf);}
+  });},{threshold:.05}).observe(cv);
+})();
+
+/* ---------- routing playground ---------- */
+var DOMAINS=["finance","competitive","web","geo","agent_ecosystem","idc_ecosystem"];
+var TYPES=["price_move","news_event","sentiment_shift","protocol_update","anomaly_detected","repo_release","ecosystem_event","mention_spike"];
+var ENTS=["NVDA","x402","MCP","BTC-USD","competitor_set_3","agif-spec","crude_wti","sector_semis"];
+var profile={domains:["finance","competitive"],signal_types:["price_move","news_event","sentiment_shift"],entities:[],min_confidence:0.70};
+
+function pills(holderId,list,key,defaultOn){
+  var h=document.getElementById(holderId);
+  list.forEach(function(v){
+    var b=document.createElement("button");
+    b.className="tg"+(defaultOn.indexOf(v)>-1?" on":"");
+    b.textContent=v;b.setAttribute("aria-pressed",defaultOn.indexOf(v)>-1);
+    b.onclick=function(){
+      var arr=profile[key],ix=arr.indexOf(v);
+      if(ix>-1)arr.splice(ix,1);else arr.push(v);
+      b.classList.toggle("on");b.setAttribute("aria-pressed",b.classList.contains("on"));
+      renderProfile();
+    };
+    h.appendChild(b);
+  });
+}
+pills("domains",DOMAINS,"domains",profile.domains);
+pills("types",TYPES,"signal_types",profile.signal_types);
+pills("entities",ENTS,"entities",profile.entities);
+
+var confEl=document.getElementById("conf"),confOut=document.getElementById("confout");
+confEl.oninput=function(){profile.min_confidence=(+confEl.value/100);confOut.textContent=profile.min_confidence.toFixed(2);renderProfile();};
+
+function renderProfile(){
+  var p={agif:"0.1",agent_id:"agent_prod_7a3f",domains:profile.domains,signal_types:profile.signal_types,
+    entities:profile.entities,min_confidence:+profile.min_confidence.toFixed(2),delivery:"at_least_once"};
+  var json=JSON.stringify(p,null,2)
+    .replace(/"([^"]+)":/g,'<span class="key">"$1"</span>:')
+    .replace(/: "([^"]*)"/g,': <span class="str">"$1"</span>')
+    .replace(/: ([0-9.]+)/g,': <span class="num">$1</span>');
+  document.getElementById("profilepre").innerHTML=json;
+  window.__profileRaw=JSON.stringify(p,null,2);
+}
+renderProfile();
+document.getElementById("jsontoggle").onclick=function(){
+  var box=document.getElementById("profilejson");box.classList.toggle("open");
+  this.textContent=box.classList.contains("open")?"HIDE PROFILE JSON ▴":"VIEW PROFILE AS AGIF JSON ▾";
+};
+document.getElementById("copyprofile").onclick=function(){
+  var btn=this;
+  (navigator.clipboard?navigator.clipboard.writeText(window.__profileRaw):Promise.reject())
+    .then(function(){btn.textContent="COPIED ✓";setTimeout(function(){btn.textContent="COPY JSON";},1600);})
+    .catch(function(){btn.textContent="SELECT & COPY";});
+};
+
+var received=0,routed=0,paused=false,timer=null;
+var seq=Math.floor(Math.random()*4096);
+function makeSignal(){
+  seq++;
+  var d=DOMAINS[Math.floor(Math.random()*DOMAINS.length)];
+  var biased=Math.random()<0.45&&profile.domains.length?profile.domains[Math.floor(Math.random()*profile.domains.length)]:d;
+  return {id:"sig_"+(seq).toString(16),domain:biased,
+    type:TYPES[Math.floor(Math.random()*TYPES.length)],
+    entity:ENTS[Math.floor(Math.random()*ENTS.length)],
+    confidence:+(0.4+Math.random()*0.59).toFixed(2)};
+}
+function matches(s){
+  if(profile.domains.length&&profile.domains.indexOf(s.domain)<0)return false;
+  if(profile.signal_types.length&&profile.signal_types.indexOf(s.type)<0)return false;
+  if(profile.entities.length&&profile.entities.indexOf(s.entity)<0)return false;
+  if(s.confidence<profile.min_confidence)return false;
+  return true;
+}
+function row(s,cls){
+  var el=document.createElement("div");el.className="sig "+cls;
+  el.innerHTML='<div class="t1"><span class="ty">'+s.type+'</span><span class="cf">conf '+s.confidence.toFixed(2)+'</span></div>'
+    +'<div class="t2"><span>'+s.domain+' · '+s.entity+'</span><span>'+s.id+'</span></div>';
+  return el;
+}
+function push(holder,el,max){holder.insertBefore(el,holder.firstChild);while(holder.children.length>max)holder.removeChild(holder.lastChild);}
+function tick(){
+  if(paused)return;
+  var s=makeSignal();received++;
+  var ok=matches(s);
+  push(document.getElementById("instream"),row(s,ok?"routed":"dropped"),7);
+  if(ok){routed++;push(document.getElementById("outstream"),row(s,"routed"),7);}
+  document.getElementById("incount").textContent=received+" RECEIVED";
+  document.getElementById("outcount").textContent=routed+" ROUTED";
+  document.getElementById("noisepct").textContent=received?Math.round((1-routed/received)*100)+"%":"0%";
+}
+function startStream(){if(timer)clearInterval(timer);timer=setInterval(tick,RM?2600:1600);}
+startStream();for(var w=0;w<5;w++)tick();
+document.getElementById("pausebtn").onclick=function(){
+  paused=!paused;
+  this.textContent=paused?"RESUME":"PAUSE";
+  document.getElementById("livedot").className="dot"+(paused?"":" on");
+  document.getElementById("livelabel").textContent=paused?"STREAM PAUSED":"STREAM ACTIVE · SYNTHETIC SIGNALS";
+};
+
+/* ---------- schema tabs ---------- */
+document.querySelectorAll(".tab").forEach(function(t){
+  t.onclick=function(){
+    document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});
+    document.querySelectorAll(".tabpane").forEach(function(x){x.classList.remove("on");});
+    t.classList.add("on");document.getElementById(t.dataset.pane).classList.add("on");
+  };
+});
+
+/* ---------- provenance verifier (real SHA-256) ---------- */
+var basePayload={agif:"0.1",id:"sig_7f3a9c",type:"price_move",domain:"finance",entity:"NVDA",value:{pct:-4.2,window_s:300},confidence:0.91};
+var tampered=false,recordedHash="";
+function payloadString(t){
+  var p=JSON.parse(JSON.stringify(basePayload));
+  if(t)p.value.pct=4.2;
+  return JSON.stringify(p);
+}
+function fallbackHash(str){
+  var h1=0x811c9dc5,h2=0x9dc5811c;
+  for(var i=0;i<str.length;i++){var c=str.charCodeAt(i);h1=(h1^c)>>>0;h1=(h1*16777619)>>>0;h2=(h2^((c<<3)|(c>>2)))>>>0;h2=(h2*16777619)>>>0;}
+  return ("00000000"+h1.toString(16)).slice(-8)+("00000000"+h2.toString(16)).slice(-8)+"…(demo hash — secure context unavailable)";
+}
+function sha256(str){
+  if(window.crypto&&crypto.subtle&&window.TextEncoder){
+    return crypto.subtle.digest("SHA-256",new TextEncoder().encode(str)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");
+    });
+  }
+  return Promise.resolve(fallbackHash(str));
+}
+function renderPayload(){
+  var v=document.getElementById("payloadview");
+  var pctHtml=tampered?'<span class="mut">4.2  ← mutated in transit</span>':'-4.2';
+  v.innerHTML='{ "type": "price_move", "entity": "NVDA",<br>&nbsp;&nbsp;"value": { "pct": '+pctHtml+', "window_s": 300 },<br>&nbsp;&nbsp;"confidence": 0.91 }';
+}
+sha256(payloadString(false)).then(function(h){
+  recordedHash=h;
+  document.getElementById("recordedhash").textContent="recorded sha256: "+h.slice(0,24)+"…";
+});
+renderPayload();
+document.getElementById("tamperbtn").onclick=function(){
+  tampered=!tampered;
+  this.textContent=tampered?"RESTORE PAYLOAD":"TAMPER WITH PAYLOAD";
+  renderPayload();
+  document.getElementById("vresult").className="vresult";
+};
+document.getElementById("verifybtn").onclick=function(){
+  var r=document.getElementById("vresult");
+  r.className="vresult";r.textContent="computing sha-256…";r.style.display="block";
+  sha256(payloadString(tampered)).then(function(h){
+    var ok=h===recordedHash;
+    r.className="vresult "+(ok?"ok":"bad");
+    r.innerHTML=(ok
+      ?"✓ INTEGRITY VERIFIED — payload hash matches the provenance chain. Safe to act."
+      :"✗ VERIFICATION FAILED — payload was modified after signing. Policy: discard signal, flag source.")
+      +'<br><span class="hh">computed: '+h.slice(0,40)+'…</span>';
+  });
+};
+
+/* ---------- live feed demo (real endpoint, same origin) ---------- */
+function showFeed(cmd, body, cls){
+  var t=document.getElementById("feedterm");
+  t.innerHTML='<span class="tcmd">'+cmd+'</span>\n\n<span class="'+cls+'">'+body+'</span>';
+  t.scrollTop=0;
+}
+function pretty(o){return JSON.stringify(o,null,2).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];});}
+document.getElementById("call402").onclick=function(){
+  var btn=this;btn.textContent="CALLING…";
+  fetch("/v1/signals").then(function(r){
+    return r.json().then(function(j){return {status:r.status,json:j};});
+  }).then(function(res){
+    showFeed("$ curl "+location.origin+"/v1/signals",
+      "HTTP/2 "+res.status+" Payment Required\n\n"+pretty(res.json), res.status===402?"t402":"t200");
+    btn.textContent="CALL WITHOUT KEY → EXPECT 402";
+  }).catch(function(e){
+    showFeed("$ curl "+location.origin+"/v1/signals","request failed: "+e,"t402");
+    btn.textContent="CALL WITHOUT KEY → EXPECT 402";
+  });
+};
+document.getElementById("callauthed").onclick=function(){
+  var key=document.getElementById("apikeyinput").value.trim();
+  if(!key){showFeed("$ curl -H \"Authorization: Bearer …\" "+location.origin+"/v1/signals","paste a key first — get one from the starter checkout, or apply as a design partner for a courtesy key.","t402");return;}
+  var btn=this;btn.textContent="CALLING…";
+  fetch("/v1/signals?limit=3",{headers:{Authorization:"Bearer "+key}}).then(function(r){
+    return r.json().then(function(j){return {status:r.status,json:j};});
+  }).then(function(res){
+    var ok=res.status===200;
+    showFeed("$ curl -H \"Authorization: Bearer "+key.slice(0,12)+"…\" "+location.origin+"/v1/signals?limit=3",
+      "HTTP/2 "+res.status+(ok?" OK":"")+"\n\n"+pretty(res.json), ok?"t200":"t402");
+    btn.textContent="CALL WITH KEY";
+  }).catch(function(e){
+    showFeed("$ curl "+location.origin+"/v1/signals","request failed: "+e,"t402");
+    btn.textContent="CALL WITH KEY";
+  });
+};
+
+/* ---------- reveals ---------- */
+var ro=new IntersectionObserver(function(en){
+  en.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");ro.unobserve(e.target);}});
+},{threshold:.12,rootMargin:"0px 0px -40px 0px"});
+document.querySelectorAll(".reveal").forEach(function(el,i){el.style.transitionDelay=(i%3)*0.07+"s";ro.observe(el);});
+})();
+</script>
+</body>
+</html>
