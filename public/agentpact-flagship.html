@@ -255,8 +255,34 @@ footer{border-top:1px solid var(--line-soft);padding:42px 0;background:var(--ink
 
 @media (max-width:1020px){.playgrid{grid-template-columns:1fr}.pcol{border-right:none;border-bottom:1px solid var(--line)}.pcol:last-child{border-bottom:none}.provsplit,.moatgrid,.duogrid,.feedgrid{grid-template-columns:1fr}.phase{grid-template-columns:1fr;gap:8px}}
 @media (max-width:900px){.navlinks{display:none}section{padding:80px 0}header{padding-top:120px}}
-/* Iron Canvas grain overlay — craft texture, luxury/creative tier */
-body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.03;
+/* ============ FABLE IMMERSIVE PASS ============ */
+/* generative flow-field canvas sits behind the radar, page-wide ambient depth */
+#flow{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.42}
+nav,header,section,footer,.route{position:relative;z-index:1}
+nav{z-index:60}
+/* scroll progress rail — left edge, with layer beacons */
+.srail{position:fixed;left:max(14px,env(safe-area-inset-left));top:0;bottom:0;width:2px;z-index:55;pointer-events:none;display:flex;flex-direction:column;align-items:center}
+.srail .track{position:absolute;top:12vh;bottom:12vh;width:1px;background:var(--line)}
+.srail .fill{position:absolute;top:12vh;width:1px;background:linear-gradient(var(--teal),var(--gold));height:0;box-shadow:0 0 8px var(--teal-dim)}
+.srail .beacon{position:absolute;width:9px;height:9px;border-radius:50%;border:1px solid var(--line);background:var(--ink);left:50%;transform:translateX(-50%);transition:border-color .3s,background .3s,box-shadow .3s}
+.srail .beacon.hit{border-color:var(--teal);background:var(--teal);box-shadow:0 0 10px var(--teal)}
+.srail .beacon b{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--faint);white-space:nowrap;opacity:0;transition:opacity .3s;font-weight:400}
+.srail .beacon.hit b{opacity:1;color:var(--teal)}
+@media(max-width:900px){.srail{display:none}#flow{opacity:.28}}
+/* hyperframe hero — parallax depth planes */
+.heroin{will-change:transform}
+.hplane{position:absolute;inset:0;pointer-events:none;z-index:1}
+.hplane span{position:absolute;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);opacity:.5;white-space:nowrap}
+h1{position:relative}
+h1 .glow{position:absolute;inset:-10% -6%;background:radial-gradient(60% 60% at 50% 46%,rgba(63,184,175,.14),transparent 70%);filter:blur(28px);z-index:-1;pointer-events:none}
+/* layer cards — 3D tilt + depth sheen */
+.layer{transform-style:preserve-3d;will-change:transform}
+.layer .sheen{position:absolute;inset:0;border-radius:10px;background:radial-gradient(320px 200px at var(--mx,50%) var(--my,0%),rgba(63,184,175,.10),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.layer:hover .sheen{opacity:1}
+/* magnetic buttons */
+.btn,.navcta,.vbtn{will-change:transform}
+.floatnum{display:inline-block}
+body::after{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.03;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:200px 200px}
 @media (prefers-reduced-motion:reduce){
@@ -267,6 +293,16 @@ body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;o
 </style>
 </head>
 <body>
+<canvas id="flow" aria-hidden="true"></canvas>
+<div class="srail" aria-hidden="true">
+  <div class="track"></div><div class="fill" id="railfill"></div>
+  <div class="beacon" data-sec="play"><b>FEED</b></div>
+  <div class="beacon" data-sec="spec"><b>SPEC</b></div>
+  <div class="beacon" data-sec="provenance"><b>PROOF</b></div>
+  <div class="beacon" data-sec="feed"><b>402</b></div>
+  <div class="beacon" data-sec="skills"><b>SKILLS</b></div>
+  <div class="beacon" data-sec="roadmap"><b>ROAD</b></div>
+</div>
 
 <nav>
   <div class="navin">
@@ -288,14 +324,21 @@ body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;o
 
 <header id="top">
   <canvas id="radar" aria-hidden="true"></canvas>
+  <div class="hplane" id="hplane" aria-hidden="true">
+    <span style="top:22%;left:6%" data-d="0.5">402 PAYMENT REQUIRED</span>
+    <span style="top:70%;left:8%" data-d="0.8">sha256: 9f2c41a8…</span>
+    <span style="top:34%;right:7%" data-d="0.6">agif: "0.1"</span>
+    <span style="top:78%;right:10%" data-d="1.1">confidence: 0.98</span>
+    <span style="top:14%;right:26%" data-d="0.4">intent_profile ⇢ router</span>
+  </div>
   <div class="heroveil" aria-hidden="true"></div>
-  <div class="wrap heroin">
+  <div class="wrap heroin" id="heroin">
     <div class="kicker">
       <span>AGENTPACT · THE AGENT ECONOMY SUITE</span>
       <span><b>STATUS: SPEC SHIPPED · FEED LIVE · PAYWALL LIVE</b></span>
       <span>HUNTSVILLE, AL</span>
     </div>
-    <h1>Intelligence your agent can <em>verify — and pay for.</em></h1>
+    <h1><span class="glow" aria-hidden="true"></span>Intelligence your agent can <em>verify — and pay for.</em></h1>
     <p class="herosub">AgentPact is one product in four layers: an open format (AGIF), an intent-based router, a cryptographic provenance standard, and a live HTTP&nbsp;402 endpoint that autonomous agents can buy access to. Not another data feed — the trust layer that makes any feed safe to act on.</p>
     <div class="statline">
       <a href="https://github.com/Navigata1/agif-spec"><div class="n">v0.1</div><div class="l">Open spec · on GitHub</div></a>
@@ -314,25 +357,25 @@ body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;o
     <h2 class="sec reveal">The suite, <em>consolidated.</em></h2>
     <p class="lede reveal">Five overnight prototypes became one honest product. Each layer below is real, statused plainly, and linked to the thing itself — no ghost products, no invented counts.</p>
     <div class="layers">
-      <a class="layer reveal" href="#spec">
+      <a class="layer reveal tilt" href="#spec"><span class="sheen" aria-hidden="true"></span>
         <div class="ln">L1 · EDGE <span class="chip ok">SHIPPED</span></div>
         <h4>The AGIF spec</h4>
         <p>Typed signals, intent profiles, provenance chains. MIT-licensed, versioned, open comment window.</p>
         <span class="goto">READ THE SPEC ↓</span>
       </a>
-      <a class="layer reveal" href="#feed">
+      <a class="layer reveal tilt" href="#feed"><span class="sheen" aria-hidden="true"></span>
         <div class="ln">L2 · FEED <span class="chip ok">LIVE · 402</span></div>
         <h4>Signal Forge</h4>
         <p>AGIF-typed signal streams behind a working paywall. Unpaid request → HTTP 402. Paid key → typed, signed intelligence.</p>
         <span class="goto">CALL THE ENDPOINT ↓</span>
       </a>
-      <a class="layer reveal" href="#skills">
+      <a class="layer reveal tilt" href="#skills"><span class="sheen" aria-hidden="true"></span>
         <div class="ln">L3 · SKILLS <span class="chip teal">CATALOG LIVE</span></div>
         <h4>Skill Bazaar</h4>
         <p>A curated catalog of real, working agent skills and frameworks from the IDC shop — honest counts, real install commands.</p>
         <span class="goto">BROWSE THE BAZAAR ↓</span>
       </a>
-      <a class="layer reveal" href="#memory">
+      <a class="layer reveal tilt" href="#memory"><span class="sheen" aria-hidden="true"></span>
         <div class="ln">L4 · MEMORY <span class="chip lab">DECISION GATE</span></div>
         <h4>Context Engine</h4>
         <p>Agent memory taxonomy — episodic, semantic, procedural. Parked until feed revenue data makes the build case.</p>
@@ -530,8 +573,8 @@ Press <span style="color:var(--teal)">CALL WITHOUT KEY</span> to run this reques
           <li>Usage ledger — every request accounted for</li>
           <li>Key delivered instantly after checkout</li>
         </ul>
-        <a class="btn teal" href="https://buy.stripe.com/test_aFa6oJ2Kd81oafQdvI0VO05" style="width:100%;justify-content:center">GET A STARTER KEY →</a>
-        <div class="x402row"><b>RAILS, PLAINLY:</b> Checkout runs on Stripe (test mode until GA flip — no card is charged today). The endpoint already speaks HTTP 402 with machine-readable payment instructions; x402 USDC-on-Base settlement is the planned v2 rail, and this page will say so when it's real — not before.</div>
+        <a class="btn teal" href="https://buy.stripe.com/aFa6oJ2Kd81oafQdvI0VO05" style="width:100%;justify-content:center">GET A STARTER KEY →</a>
+        <div class="x402row"><b>RAILS, PLAINLY:</b> Checkout runs live on Stripe; your key mints at the redirect, and we store only its hash. The endpoint already speaks HTTP 402 with machine-readable payment instructions; x402 USDC-on-Base settlement is the planned v2 rail, and this page will say so when it's real — not before.</div>
       </div>
     </div>
   </div>
@@ -603,7 +646,7 @@ Press <span style="color:var(--teal)">CALL WITHOUT KEY</span> to run this reques
     <h2 class="sec reveal">Honest status, <em>by phase.</em></h2>
     <div class="phases">
       <div class="phase reveal"><span class="pid">PHASE 01</span><div><h4>AGIF spec v0.1</h4><p>The three core objects — signal, intent profile, provenance — published as an open draft with JSON Schemas, a zero-dependency validator, CI, and a public comment window. The playground on this page is its living documentation.</p></div><span class="chip ok">SHIPPED · 2026-07-06</span></div>
-      <div class="phase reveal"><span class="pid">PHASE 02</span><div><h4>First paid surface — GET /v1/signals</h4><p>A real vault of curated, provenance-hashed signals behind HTTP 402. Stripe checkout issues metered keys; every request lands in a usage ledger. Small, real, typed — 15 honest signals beat 2,847 fake ones.</p></div><span class="chip ok">LIVE · TEST-MODE CHECKOUT</span></div>
+      <div class="phase reveal"><span class="pid">PHASE 02</span><div><h4>First paid surface — GET /v1/signals</h4><p>A real vault of curated, provenance-hashed signals behind HTTP 402. Stripe checkout issues metered keys; every request lands in a usage ledger. Small, real, typed — 15 honest signals beat 2,847 fake ones.</p></div><span class="chip ok">LIVE · PAID · GA</span></div>
       <div class="phase reveal"><span class="pid">PHASE 03</span><div><h4>Reference router + TypeScript SDK</h4><p>The routing logic running in your browser right now, hardened and packaged: an in-memory intent matcher, the schema validators from the spec repo, and a client SDK with replay support.</p></div><span class="chip lab">IN THE LAB</span></div>
       <div class="phase reveal"><span class="pid">PHASE 04</span><div><h4>Hosted vault + provenance network</h4><p>Managed AGIF streams over WebSocket with at-least-once delivery, then cross-publisher signature verification so intelligence from any AGIF-speaking source carries portable trust. The endgame — and the reason the spec comes first.</p></div><span class="chip lab">PLANNED</span></div>
     </div>
@@ -668,6 +711,116 @@ var RM=matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(e.isIntersecting){vis=true;if(RM){frame(0);vis=false;}else raf=requestAnimationFrame(frame);}
     else{vis=false;if(raf)cancelAnimationFrame(raf);}
   });},{threshold:.05}).observe(cv);
+})();
+
+/* ---------- FABLE: generative flow-field (algorithmic art) ---------- */
+(function(){
+  var cv=document.getElementById("flow");if(!cv)return;var ctx=cv.getContext("2d"),W,H,DPR,raf,t0=0;
+  function size(){DPR=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+  size();addEventListener("resize",size);
+  // pseudo-noise: layered sines — deterministic, cheap, no libs
+  function field(x,y,t){
+    return Math.sin(x*0.0016+t*0.15)+Math.cos(y*0.0018-t*0.12)+Math.sin((x+y)*0.0011+t*0.09);
+  }
+  var N=RM?0:Math.round(Math.min(W,900)/9), P=[];
+  for(var i=0;i<N;i++)P.push({x:Math.random()*W,y:Math.random()*H,l:40+Math.random()*90,g:Math.random()<0.22});
+  var mx=0.5,my=0.4;
+  addEventListener("mousemove",function(e){mx=e.clientX/innerWidth;my=e.clientY/innerHeight;},{passive:true});
+  function frame(ts){
+    var t=ts*0.001;
+    ctx.globalCompositeOperation="source-over";
+    ctx.fillStyle="rgba(12,21,29,0.10)";ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation="lighter";ctx.lineWidth=1;
+    for(var i=0;i<P.length;i++){
+      var p=P[i], a=field(p.x,p.y,t)*Math.PI + (mx-0.5)*0.9;
+      var nx=p.x+Math.cos(a)*1.5, ny=p.y+Math.sin(a)*1.5;
+      ctx.strokeStyle=p.g?"rgba(217,164,65,0.16)":"rgba(63,184,175,0.14)";
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(nx,ny);ctx.stroke();
+      p.x=nx;p.y=ny;p.l--;
+      if(p.l<0||p.x<0||p.x>W||p.y<0||p.y>H){p.x=Math.random()*W;p.y=Math.random()*H;p.l=40+Math.random()*90;}
+    }
+    raf=requestAnimationFrame(frame);
+  }
+  if(!RM){raf=requestAnimationFrame(frame);}
+  else{ctx.fillStyle="rgba(12,21,29,1)";ctx.fillRect(0,0,W,H);} // static ground for reduced-motion
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden){if(raf)cancelAnimationFrame(raf);}else if(!RM){raf=requestAnimationFrame(frame);}
+  });
+})();
+
+/* ---------- FABLE: scroll rail, hero parallax, counters ---------- */
+(function(){
+  var fill=document.getElementById("railfill"),beacons=[].slice.call(document.querySelectorAll(".srail .beacon"));
+  var heroin=document.getElementById("heroin"),hplane=document.getElementById("hplane");
+  var planes=hplane?[].slice.call(hplane.querySelectorAll("span")):[];
+  var railTop=window.innerHeight*0.12, railH=window.innerHeight*0.76;
+  addEventListener("resize",function(){railTop=innerHeight*0.12;railH=innerHeight*0.76;});
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;ticking=true;
+    requestAnimationFrame(function(){
+      var y=window.scrollY, dh=document.documentElement.scrollHeight-innerHeight;
+      var prog=dh>0?Math.min(1,y/dh):0;
+      if(fill)fill.style.height=(railH*prog)+"px";
+      // beacons light as their section passes mid-viewport
+      beacons.forEach(function(b){
+        var el=document.getElementById(b.dataset.sec);if(!el)return;
+        var r=el.getBoundingClientRect();
+        b.classList.toggle("hit", r.top<innerHeight*0.55 && r.bottom>innerHeight*0.2);
+      });
+      // hero parallax: content drifts up + fades, depth planes move at their own rate
+      if(heroin && y<innerHeight){
+        heroin.style.transform="translateY("+(y*0.18)+"px)";
+        heroin.style.opacity=Math.max(0,1-y/(innerHeight*0.85));
+      }
+      if(!RM)planes.forEach(function(s){var d=parseFloat(s.dataset.d)||0.6;s.style.transform="translateY("+(y*d*0.35)+"px)";});
+      ticking=false;
+    });
+  }
+  addEventListener("scroll",onScroll,{passive:true});onScroll();
+
+  // hero stat counters — count up on first view
+  var counted=false;
+  function animateCount(el,to){
+    if(RM){el.textContent=to;return;}
+    var start=performance.now(),from=0;
+    function step(t){var k=Math.min(1,(t-start)/900);var e=1-Math.pow(1-k,3);el.textContent=Math.round(from+(to-from)*e);if(k<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var vc=document.getElementById("vaultcount");
+  var statline=document.querySelector(".statline");
+  if(statline&&vc){
+    new IntersectionObserver(function(en){en.forEach(function(e){
+      if(e.isIntersecting&&!counted){counted=true;animateCount(vc,15);}
+    });},{threshold:.4}).observe(statline);
+  }
+})();
+
+/* ---------- FABLE: card 3D tilt + sheen tracking ---------- */
+(function(){
+  if(RM||("ontouchstart" in window))return;
+  document.querySelectorAll(".tilt").forEach(function(card){
+    var sheen=card.querySelector(".sheen");
+    card.addEventListener("mousemove",function(e){
+      var r=card.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      card.style.transform="perspective(800px) rotateY("+((px-0.5)*7)+"deg) rotateX("+((0.5-py)*7)+"deg) translateY(-4px)";
+      if(sheen){sheen.style.setProperty("--mx",(px*100)+"%");sheen.style.setProperty("--my",(py*100)+"%");}
+    });
+    card.addEventListener("mouseleave",function(){card.style.transform="";});
+  });
+})();
+
+/* ---------- FABLE: magnetic buttons ---------- */
+(function(){
+  if(RM||("ontouchstart" in window))return;
+  document.querySelectorAll(".btn.teal,.navcta,.vbtn").forEach(function(b){
+    b.addEventListener("mousemove",function(e){
+      var r=b.getBoundingClientRect();
+      b.style.transform="translate("+((e.clientX-r.left-r.width/2)*0.22)+"px,"+((e.clientY-r.top-r.height/2)*0.3-1)+"px)";
+    });
+    b.addEventListener("mouseleave",function(){b.style.transform="";});
+  });
 })();
 
 /* ---------- routing playground ---------- */

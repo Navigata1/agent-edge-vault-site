@@ -14,7 +14,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL ?? "";
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY ?? "";
 const CHECKOUT_URL =
   process.env.STRIPE_PAYMENT_LINK ??
-  "https://buy.stripe.com/test_aFa6oJ2Kd81oafQdvI0VO05";
+  "https://buy.stripe.com/aFa6oJ2Kd81oafQdvI0VO05";
 
 // Basic per-instance rate limit (defense in depth; quotas are the real meter).
 const hits = new Map<string, { n: number; reset: number }>();
@@ -81,7 +81,7 @@ export async function GET(req: Request) {
           plan: "starter_key",
           price: "$19/month — 1,000 requests",
           checkout: CHECKOUT_URL,
-          note: "Checkout currently runs in Stripe test mode (pre-GA). Key is issued instantly at the redirect after payment.",
+          note: "Live checkout. Key is issued instantly at the redirect after payment; only its hash is stored.",
         },
         authenticate: {
           header: "Authorization: Bearer apk_live_...",
