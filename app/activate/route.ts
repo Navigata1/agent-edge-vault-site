@@ -128,8 +128,8 @@ export async function GET(req: Request) {
      <p><b>Copy this key now — it is shown once.</b> We store only a SHA-256 hash; nobody at IDC can read it back to you.</p>
      <div class="keybox" id="k">${minted.api_key}</div>
      <p>First call:</p>
-     <code>curl -H "Authorization: Bearer ${minted.api_key.slice(0, 16)}…" \\
-  "${url.origin}/v1/signals?domains=agent_ecosystem&min_confidence=0.9"</code>
+    <code>curl -H "Authorization: Bearer ${minted.api_key.slice(0, 16)}…" \\
+  "https://api.islanddevcrew.ai/v1/signals?domains=agent_ecosystem&min_confidence=0.9"</code>
      <p>Quota: 1,000 requests/month · key valid 35 days per billing cycle · <a href="https://github.com/Navigata1/agif-spec">AGIF spec</a></p>
      <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('k').textContent).then(()=>this.textContent='COPIED ✓')">COPY KEY</button>
      <a class="btn ghost" href="/#feed">TRY IT ON THE LIVE DEMO →</a>`

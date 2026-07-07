@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AgentPact — Typed, Routed, Verifiable, Payable Intelligence for Agents</title>
 <meta name="description" content="AgentPact is the agent economy suite from Island Development Crew: an open format (AGIF), an intent router, cryptographic provenance, and a live HTTP 402 endpoint agents can pay for. Try the routing demo.">
-<link rel="canonical" href="https://agent-edge-vault-site.vercel.app">
+<link rel="canonical" href="https://agentpact.islanddevcrew.app">
 <meta property="og:title" content="AgentPact — the trust layer for agent intelligence">
 <meta property="og:description" content="Open AGIF spec, live routing playground, SHA-256 provenance, and a working agent-payable endpoint. Zero fabricated metrics.">
-<meta property="og:url" content="https://agent-edge-vault-site.vercel.app">
+<meta property="og:url" content="https://agentpact.islanddevcrew.app">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -563,7 +563,7 @@ body::after{content:"";position:fixed;inset:0;z-index:9998;pointer-events:none;o
     <div class="feedgrid">
       <div class="termbox reveal">
         <div class="termhead"><span class="tdots"><i></i><i></i><i></i></span> LIVE REQUEST · SAME ORIGIN · NO MOCK</div>
-        <div class="termbody" id="feedterm"><span class="tcmd">$ curl https://agent-edge-vault-site.vercel.app/v1/signals</span>
+        <div class="termbody" id="feedterm"><span class="tcmd">$ curl https://api.islanddevcrew.ai/v1/signals</span>
 
 Press <span style="color:var(--teal)">CALL WITHOUT KEY</span> to run this request from your browser.</div>
         <div class="feedctas">
@@ -600,7 +600,7 @@ Press <span style="color:var(--teal)">CALL WITHOUT KEY</span> to run this reques
         <h4>Real skills, real repos, real installs</h4>
         <p>The Bazaar lists what the IDC shop actually ships — build orchestration, design pipelines, the AGIF validator — with install commands that work and counts pulled from GitHub, not imagination. Small catalog, every entry real.</p>
         <div class="mini">
-          → <a href="https://skill-bazaar-site.vercel.app">skill-bazaar-site.vercel.app</a><br>
+          → <a href="https://bazaar.islanddevcrew.app">bazaar.islanddevcrew.app</a><br>
           → Iron Canvas v4.1 · AGIF Spec · Build Orchestration · more
         </div>
       </div>
@@ -1023,32 +1023,33 @@ function showFeed(cmd, body, cls){
   t.scrollTop=0;
 }
 function pretty(o){return JSON.stringify(o,null,2).replace(/[<>&]/g,function(c){return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c];});}
+var API_ORIGIN="https://api.islanddevcrew.ai";
 document.getElementById("call402").onclick=function(){
   var btn=this;btn.textContent="CALLING…";
   fetch("/v1/signals").then(function(r){
     return r.json().then(function(j){return {status:r.status,json:j};});
   }).then(function(res){
-    showFeed("$ curl "+location.origin+"/v1/signals",
+    showFeed("$ curl "+API_ORIGIN+"/v1/signals",
       "HTTP/2 "+res.status+" Payment Required\n\n"+pretty(res.json), res.status===402?"t402":"t200");
     btn.textContent="CALL WITHOUT KEY → EXPECT 402";
   }).catch(function(e){
-    showFeed("$ curl "+location.origin+"/v1/signals","request failed: "+e,"t402");
+    showFeed("$ curl "+API_ORIGIN+"/v1/signals","request failed: "+e,"t402");
     btn.textContent="CALL WITHOUT KEY → EXPECT 402";
   });
 };
 document.getElementById("callauthed").onclick=function(){
   var key=document.getElementById("apikeyinput").value.trim();
-  if(!key){showFeed("$ curl -H \"Authorization: Bearer …\" "+location.origin+"/v1/signals","paste a key first — get one from the starter checkout, or apply as a design partner for a courtesy key.","t402");return;}
+  if(!key){showFeed("$ curl -H \"Authorization: Bearer …\" "+API_ORIGIN+"/v1/signals","paste a key first — get one from the starter checkout, or apply as a design partner for a courtesy key.","t402");return;}
   var btn=this;btn.textContent="CALLING…";
   fetch("/v1/signals?limit=3",{headers:{Authorization:"Bearer "+key}}).then(function(r){
     return r.json().then(function(j){return {status:r.status,json:j};});
   }).then(function(res){
     var ok=res.status===200;
-    showFeed("$ curl -H \"Authorization: Bearer "+key.slice(0,12)+"…\" "+location.origin+"/v1/signals?limit=3",
+    showFeed("$ curl -H \"Authorization: Bearer "+key.slice(0,12)+"…\" "+API_ORIGIN+"/v1/signals?limit=3",
       "HTTP/2 "+res.status+(ok?" OK":"")+"\n\n"+pretty(res.json), ok?"t200":"t402");
     btn.textContent="CALL WITH KEY";
   }).catch(function(e){
-    showFeed("$ curl "+location.origin+"/v1/signals","request failed: "+e,"t402");
+    showFeed("$ curl "+API_ORIGIN+"/v1/signals","request failed: "+e,"t402");
     btn.textContent="CALL WITH KEY";
   });
 };
