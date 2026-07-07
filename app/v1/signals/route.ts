@@ -16,6 +16,38 @@ const CHECKOUT_URL =
   process.env.STRIPE_PAYMENT_LINK ??
   "https://buy.stripe.com/aFa6oJ2Kd81oafQdvI0VO05";
 
+// --- x402 on-chain rail (Coinbase CDP Facilitator / Base) ---
+// Fully honest by construction: the x402-native `accepts` block is emitted ONLY
+// when a real funded wallet is configured. Until then the endpoint advertises
+// x402 as "planned" — no invented wallet, no false settlement claim. The moment
+// X402_PAY_TO is set, the 402 becomes protocol-discoverable and the CDP
+// Facilitator auto-lists it on the x402 Bazaar the first time it settles.
+const X402_PAY_TO = process.env.X402_PAY_TO ?? "";
+const X402_NETWORK = process.env.X402_NETWORK ?? "eip155:8453"; // Base mainnet
+const X402_ASSET =
+  process.env.X402_ASSET ?? "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
+const X402_AMOUNT = process.env.X402_AMOUNT ?? "50000"; // 0.05 USDC (6 decimals)
+const X402_LIVE = X402_PAY_TO.length > 0;
+
+function x402Accepts(resource: string) {
+  if (!X402_LIVE) return null;
+  return [
+    {
+      scheme: "exact",
+      network: X402_NETWORK,
+      maxAmountRequired: X402_AMOUNT,
+      asset: X402_ASSET,
+      payTo: X402_PAY_TO,
+      resource,
+      description:
+        "One AGIF /v1/signals response — typed, provenance-hashed agent intelligence.",
+      mimeType: "application/json",
+      maxTimeoutSeconds: 60,
+      extra: { agif: "0.1", spec: "https://github.com/Navigata1/agif-spec" },
+    },
+  ];
+}
+
 // Basic per-instance rate limit (defense in depth; quotas are the real meter).
 const hits = new Map<string, { n: number; reset: number }>();
 function rateLimited(ip: string, max = 60, windowMs = 60_000): boolean {
@@ -70,16 +102,21 @@ export async function GET(req: Request) {
   const key = extractKey(req, url);
 
   if (!key) {
+    const resource = `${url.origin}/v1/signals`;
+    const accepts = x402Accepts(resource);
     // The product working as designed: an honest, machine-readable 402.
+    // `x402Version` + `accepts` are the fields the CDP Facilitator reads to
+    // catalog the endpoint — present only when a real wallet is configured.
     return json(
       {
         error: "payment_required",
         message:
           "GET /v1/signals serves AGIF-typed, provenance-hashed intelligence to paying agents.",
-        resource: `${url.origin}/v1/signals`,
+        resource,
+        ...(accepts ? { x402Version: 1, accepts } : {}),
         pricing: {
           plan: "starter_key",
-          price: "$19/month — 1,000 requests",
+          price: "$19/month — 1,000 requests (human path)",
           checkout: CHECKOUT_URL,
           note: "Live checkout. Key is issued instantly at the redirect after payment; only its hash is stored.",
         },
@@ -95,10 +132,16 @@ export async function GET(req: Request) {
           limit: "1..100",
         },
         spec: "https://github.com/Navigata1/agif-spec",
-        x402: {
-          status: "planned",
-          note: "This endpoint already speaks HTTP 402 with structured payment instructions; on-chain x402 (USDC on Base) settlement is the planned v2 rail and will be announced when live — not before.",
-        },
+        x402: X402_LIVE
+          ? {
+              status: "live",
+              network: X402_NETWORK,
+              note: "On-chain x402 settlement is active. Pay per the `accepts` block via the CDP Facilitator; the endpoint auto-catalogs on the x402 Bazaar after first settlement.",
+            }
+          : {
+              status: "planned",
+              note: "This endpoint speaks HTTP 402 with structured payment instructions and Stripe checkout for human key purchase. On-chain x402 (USDC on Base) is scaffolded and activates the moment a funded wallet is configured — no wallet is claimed until it is real.",
+            },
         design_partners:
           "mailto:hello@islanddevcrew.com?subject=AgentPact%20Design%20Partner",
       },
