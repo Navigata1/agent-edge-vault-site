@@ -255,6 +255,10 @@ footer{border-top:1px solid var(--line-soft);padding:42px 0;background:var(--ink
 
 @media (max-width:1020px){.playgrid{grid-template-columns:1fr}.pcol{border-right:none;border-bottom:1px solid var(--line)}.pcol:last-child{border-bottom:none}.provsplit,.moatgrid,.duogrid,.feedgrid{grid-template-columns:1fr}.phase{grid-template-columns:1fr;gap:8px}}
 @media (max-width:900px){.navlinks{display:none}section{padding:80px 0}header{padding-top:120px}}
+/* Iron Canvas grain overlay — craft texture, luxury/creative tier */
+body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
